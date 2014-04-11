@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Test canvas</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	 <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  	<script type="text/javascript" src="js/canvas.js"></script>
+	<!-- <script type="text/javascript" src="js/circles.js"></script> -->
+	<script type="text/javascript" src="js/two.js"></script>
+</head>
+<body>
+
+	<canvas id="b" style="position: absolute"></canvas>
+	<canvas id="circle"></canvas>
+
+	 <div class="scripts">
+      <script>
+
+        $(function() {
+          var two = new Two({
+            fullscreen: true,
+            autostart: true
+          }).appendTo(document.body);
+
+          var rect = two.makeRectangle(two.width / 2, two.height / 2, 200, 200);
+          rect.noStroke().fill = getRandomColor();
+
+          // Update the renderer in order to generate corresponding DOM Elements.
+          two.update();
+
+          $(rect._renderer.elem)
+            .css('cursor', 'pointer')
+            .click(function(e) {
+              rect.fill = getRandomColor();
+            });
+
+          two.bind('update', function(frameCount, timeDelta) {
+            rect.rotation = frameCount / 60;
+          });
+
+          function getRandomColor() {
+            return 'rgb('
+              + Math.floor(Math.random() * 255) + ','
+              + Math.floor(Math.random() * 255) + ','
+              + Math.floor(Math.random() * 255) + ')';
+          }
+        });
+      </script>
+    </div>
+	
+</body>
+</html>
