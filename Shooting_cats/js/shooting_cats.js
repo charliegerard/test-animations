@@ -63,7 +63,6 @@ $(window).mousemove(function(){
 	// 	});
 	// }
 
-
  //Laser starts when the user clicks on the cat
 $('#shooting_cat').click(function(){
 	//laserMoveUp()
@@ -71,23 +70,42 @@ $('#shooting_cat').click(function(){
 	var movingCat = $('#shooting_cat');
  	var e = window.event;
 
- 	//Create a new laser everytime the user clicks on the cat
- 	var newLaser = document.createElement('div')
- 	newLaser.id = "newLaser"
- 	$(newLaser).addClass('active');
- 	$('#body').append(newLaser)
-
  	var newPosX = (e.clientX);
  	var newPosY = e.clientY;
- 	console.log("I just clicked the cat")
- 	newLaser.style.top = (window.innerHeight - 50) + 'px';
 
- 	//Other way to fire the lasers
+ 	//Create a new laser everytime the user clicks on the cat
+ 	var newLaser = document.createElement('div')
+ 	newLaser.id = "newLaser";
+ 	$(newLaser).css('left', newPosX);
+ 	$('#body').append(newLaser);
+
+ 	//Add class but laser not moving up
+ 	setTimeout(function () {
+	 	$(newLaser).addClass('active');
+	 }, 100);
+
+ 	console.log("I just clicked the cat")
+ 	//newLaser.style.top = (window.innerHeight - 50) + 'px';
+
+ 	for(i = 0; i <= 4; i++){
+ 		console.log("Cat " + i + " is between " + parseInt(dancingCatArray[i].style.left) + " and  " + (parseInt(dancingCatArray[i].style.left) + parseInt(dancingCatArray[i].width)))
+ 		if (hitsCat(i, newPosX)) {
+ 			setTimeout(function () {
+	 			$(dancingCatArray[i]).hide();
+	 			catSound.play(); 
+	 		}, 200);
+ 			break;
+ 		}
+
+ 	}
+
+ 	//Lasers with Javascript but function not called
  	 var laserMove = function(){
 	  	var laserUp = function(){
+	  		console.log('laser up');
 	  		var movingUp = parseInt(newLaser.style.top);
 	  		var newPosition = movingUp - 100;
-	  		newLaser.style.top = newPosition + 'px';
+	  		//newLaser.style.top = newPosition + 'px';
 
 	  		if (newPosition <= -100) {
 	  			$(newLaser).remove();
@@ -108,18 +126,26 @@ $('#shooting_cat').click(function(){
 	 	var laserUpTimer = window.setInterval(laserUp, 50);
 	}
 
-	laserMove();
+	//laserMove();
 
  	//Sets the initial left position of newLaser
- 	 $(newLaser).css({
- 	 	left: newPosX
- 	 })
+
 });
 
-var hitsCat = function (i, newLaser) {
-	return (parseInt(newLaser.style.top) <= dancingCatArray[i].height) &&
-		   ((parseInt(newLaser.style.left) >= parseInt(dancingCatArray[i].style.left)) && 
-		   	(parseInt(newLaser.style.left) <= (parseInt(dancingCatArray[i].style.left) + parseInt(dancingCatArray[i].width))));
+var hitsCat = function (i, laserLeft) {
+	var $cat = $(dancingCatArray[i]);
+	var catLeft = parseInt($cat.css('left'));
+	var catRight = catLeft + $cat.width();
+	if ($cat.is(':hidden')) {
+		return false; // Already dead, no need to do anything.
+	}
+	if (laserLeft >= catLeft && laserLeft <= catRight) {
+		return true;
+	}
+
+	// return (parseInt(newLaser.style.top) <= dancingCatArray[i].height) &&
+	// 	   ((parseInt(newLaser.style.left) >= parseInt(dancingCatArray[i].style.left)) && 
+	// 	   	(parseInt(newLaser.style.left) <= (parseInt(dancingCatArray[i].style.left) + parseInt(dancingCatArray[i].width))));
 }
 
 }); //End of document ready
