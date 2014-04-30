@@ -1,14 +1,11 @@
 $(document).ready(function(){
+	var movingCat = $('#shooting_cat');
 
 	//Sound
 	var catSound = new Audio("http://www.kessels.com/CatSounds/kitten4.wav");
-		catSound.addEventListener("ended", function(){
-			catSound.currentTime = 0
-			// console.log("sound ended")
-		});
 
-	for(i = 0; i <= 4; i++){
-		//Create 5 images 
+	for(i = 0; i <= 7; i++){
+		//Create x number of cats 
 		var newCats = document.createElement("img");
 			newCats.setAttribute("src", "http://media.giphy.com/media/67j0Iy0UzvBG8/giphy.gif")
 			$(newCats).addClass('dancingCats');
@@ -23,130 +20,72 @@ $(document).ready(function(){
 			var dancingCatArray = $('.dancingCats')
 	}
 
-$(window).mousemove(function(){
-	var movingCat = $('#shooting_cat');
-	var e = window.event;
-	var posX = (e.clientX) - 50;
-	var posY = (e.clientY);
+	$(window).mousemove(function(){
+		var e = window.event;
+		var posX = (e.clientX) - 50;
+		var posY = (e.clientY);
 
-	//Make the cat move with the movement of the mouse
-	$(movingCat).css({
-		left: posX,
+		//Make the cat move with the movement of the mouse
+		$(movingCat).css({
+			left: posX,
+		});
+
+		//Stops the shooting cat from going offscreen on left and right sides.
+		if(parseInt(movingCat[0].style.left) < 0){
+		 	$(movingCat).css({
+		 		left: 0
+		 	})
+		} else if(parseInt(movingCat[0].style.left) >= (window.innerWidth - 100)){
+		 	$(movingCat).css({
+		 		left: (window.innerWidth - 100) + 'px'       
+		 	})
+		}
 	});
 
-	//Trying to make the cat stay fully in screen.
-	if(parseInt(movingCat[0].style.left) < 0){
-	 	$(movingCat).css({
-	 		left: 0
-	 	})
-	} else if(parseInt(movingCat[0].style.left) >= 1200){
-	 	$(movingCat).css({ //The else statement doesnt seem to work.
-	 		right: 0       // The cat is not stopped once reaching the right border of the window.
-	 	})
-	}
-});
-
-	//Create laser using CSS instead of javascript
-	// var laserMoveUp = function(){
-	// 	var e = window.event;
-	// 	var newPosX = (e.clientX)
-
-	// 	var newlaser = document.createElement('div');
-	// 		newlaser.id = "ball";
-	// 		$(newlaser).css({
-	// 			left: newPosX
-	// 		})
-	// 		$('#body').append(newlaser);
-
-	// 	$('#shooting_cat').click(function(){
-	// 		$(newlaser).addClass('active');
-	// 	});
-	// }
-
  //Laser starts when the user clicks on the cat
-$('#shooting_cat').click(function(){
-	//laserMoveUp()
+	$('#shooting_cat').click(function(){
+	 	var e = window.event;
+	 	var newPosX = (e.clientX);
+	 	var newPosY = e.clientY;
 
-	var movingCat = $('#shooting_cat');
- 	var e = window.event;
+	 	//Create a new laser everytime the user clicks on the cat
+	 	var newLaser = document.createElement('div')
+	 	newLaser.id = "newLaser";
+	 	$(newLaser).css('left', newPosX);
+	 	$('#body').append(newLaser);
 
- 	var newPosX = (e.clientX);
- 	var newPosY = e.clientY;
+	 	//Add class but laser not moving up
+	 	setTimeout(function () {
+		 	$(newLaser).addClass('active');
+		 }, 100);
 
- 	//Create a new laser everytime the user clicks on the cat
- 	var newLaser = document.createElement('div')
- 	newLaser.id = "newLaser";
- 	$(newLaser).css('left', newPosX);
- 	$('#body').append(newLaser);
-
- 	//Add class but laser not moving up
- 	setTimeout(function () {
-	 	$(newLaser).addClass('active');
-	 }, 100);
-
- 	console.log("I just clicked the cat")
- 	//newLaser.style.top = (window.innerHeight - 50) + 'px';
-
- 	for(i = 0; i <= 4; i++){
- 		console.log("Cat " + i + " is between " + parseInt(dancingCatArray[i].style.left) + " and  " + (parseInt(dancingCatArray[i].style.left) + parseInt(dancingCatArray[i].width)))
- 		if (hitsCat(i, newPosX)) {
- 			setTimeout(function () {
-	 			$(dancingCatArray[i]).hide();
-	 			catSound.play(); 
-	 		}, 200);
- 			break;
- 		}
-
- 	}
-
- 	//Lasers with Javascript but function not called
- 	 var laserMove = function(){
-	  	var laserUp = function(){
-	  		console.log('laser up');
-	  		var movingUp = parseInt(newLaser.style.top);
-	  		var newPosition = movingUp - 100;
-	  		//newLaser.style.top = newPosition + 'px';
-
-	  		if (newPosition <= -100) {
-	  			$(newLaser).remove();
-	  			clearInterval(laserUpTimer);
-	  		}
-
-	 		//Should allow to shoot each cat separately but does not seem to work
-		 	for(i = 0; i <= 4; i++){
-		 		console.log("Cat " + i + " is between " + parseInt(dancingCatArray[i].style.left) + " and  " + (parseInt(dancingCatArray[i].style.left) + parseInt(dancingCatArray[i].width)))
-		 		if(hitsCat(i, newLaser)) {
+	 	for(i = 0; i <= 4; i++){
+	 		if (hitsCat(i, newPosX)) {
+	 			setTimeout(function () {
 		 			$(dancingCatArray[i]).hide();
 		 			catSound.play(); 
-		 			break;
-		 		}
-
-		 	}
+		 		}, 200); 
+		 		/*As below loop will return true or false as soon as the laser is shot, 
+		 		and not when the laser actually touches the cat, play the sound a bit 
+		 		after the laser is shot to make it more real.*/
+	 			break;
+	 		}
 	 	}
-	 	var laserUpTimer = window.setInterval(laserUp, 50);
+	});
+
+	//Function that checks if a cat is hit or not.
+	//laserLeft refers to newPosX
+	var hitsCat = function (i, laserLeft) {
+		var $cat = $(dancingCatArray[i]);
+		var catLeft = parseInt($cat.css('left'));
+		var catRight = catLeft + $cat.width();
+		if ($cat.is(':hidden')) {
+			return false; // Already dead, no need to do anything.
+		}
+		if (laserLeft >= catLeft && laserLeft <= catRight) {
+			return true; //If laser is shot between the left and right coordinates of the cat, execute the code in the for loop above.
+		}
 	}
-
-	//laserMove();
-
- 	//Sets the initial left position of newLaser
-
-});
-
-var hitsCat = function (i, laserLeft) {
-	var $cat = $(dancingCatArray[i]);
-	var catLeft = parseInt($cat.css('left'));
-	var catRight = catLeft + $cat.width();
-	if ($cat.is(':hidden')) {
-		return false; // Already dead, no need to do anything.
-	}
-	if (laserLeft >= catLeft && laserLeft <= catRight) {
-		return true;
-	}
-
-	// return (parseInt(newLaser.style.top) <= dancingCatArray[i].height) &&
-	// 	   ((parseInt(newLaser.style.left) >= parseInt(dancingCatArray[i].style.left)) && 
-	// 	   	(parseInt(newLaser.style.left) <= (parseInt(dancingCatArray[i].style.left) + parseInt(dancingCatArray[i].width))));
-}
 
 }); //End of document ready
 

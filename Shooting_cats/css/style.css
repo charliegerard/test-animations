@@ -10,7 +10,6 @@ body{
 	position: absolute;
 }
 
-
 #newLaser{
 	width: 10px;
 	height: 50px;
@@ -25,16 +24,15 @@ body{
 
 #newLaser.active{
 	top: -100px;
-	background-color: red;
 }
 
-#dancing_cat{
+/* NOT USED ANYMORE? */
+/*#dancing_cat{
 	max-width: 7%;
 	top: 0;
 	left: 60%;
 	position: absolute;
-
-}
+}*/
 
 .dancingCats{
 	margin-left: 20px;
