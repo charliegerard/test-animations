@@ -26,13 +26,6 @@ body{
 	top: -100px;
 }
 
-/* NOT USED ANYMORE? */
-/*#dancing_cat{
-	max-width: 7%;
-	top: 0;
-	left: 60%;
-	position: absolute;
-}*/
 
 .dancingCats{
 	margin-left: 20px;
@@ -40,7 +33,6 @@ body{
 	max-width: 9%;
 	position: absolute;
 	left: 120px;
-	border: 1px solid white;
 }
 
 #cats{
