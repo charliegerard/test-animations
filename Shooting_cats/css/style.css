@@ -26,14 +26,22 @@ body{
 	top: -100px;
 }
 
-
 .dancingCats{
 	margin-left: 20px;
 	display: inline-block;
 	max-width: 9%;
 	position: absolute;
-	left: 120px;
+	top: -90px;
+	border: 1px solid white;
 }
+
+.animated {
+	transition: 1s linear top;
+}
+
+/*.active{
+	top: 500px;
+}*/
 
 #cats{
 	max-width: 960px;
