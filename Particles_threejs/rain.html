@@ -1,0 +1,105 @@
+<html>
+<html>
+ <head>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r66/three.min.js"></script>
+  <script src="orbitcontrol.js"></script>
+    <script src="particleengine.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+  <script src="images/butterflyData.js"></script>
+  <script type="text/javascript">
+      
+   $(function() {
+    
+    //scene
+    scene = new THREE.Scene();
+    //camera
+    var camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    camera.position.set(0,-13,5);
+    camera.lookAt(new THREE.Vector3( 0, 5, 0 ));
+     
+    //renderer
+    var renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+ 
+    //controls
+    var controls = new THREE.OrbitControls( camera, renderer.domElement );
+       
+    //show canvas
+    $("#canvas-container").html(renderer.domElement);
+     
+     
+ //directional light
+ var directionalLight = new THREE.DirectionalLight(0xffffff);
+ directionalLight.position.set(6, 0, 6);
+ scene.add(directionalLight);
+  
+  //Uses the butterfly image as material/texture.
+  var particleTexture = new THREE.Texture(butterfly);
+  particleTexture.wrapS = THREE.RepeatWrapping;
+  particleTexture.wrapT = THREE.RepeatWrapping;
+  particleTexture.repeat.x = particleTexture.repeat.y = 32;
+  particleTexture.needsUpdate = true;
+
+    //plane
+    var geometry = new THREE.PlaneGeometry(20, 20);
+    var material = new THREE.MeshLambertMaterial( { map: particleTexture } );
+    var plane = new THREE.Mesh( geometry, material );
+    scene.add(plane);
+     
+     
+ //particle
+     
+    //rain
+    var settings = {
+      positionStyle    : Type.CUBE,
+      positionBase     : new THREE.Vector3( 0, 0, 10 ),
+      positionSpread   : new THREE.Vector3( 50, 20, 0 ),
+ 
+      velocityStyle    : Type.CUBE,
+      velocityBase     : new THREE.Vector3( 0, 0, -60 ),
+      velocitySpread   : new THREE.Vector3( 5, 5, 0 ), 
+      accelerationBase : new THREE.Vector3( 200, 0, 0 ),
+       
+      // particleTexture : new THREE.Texture(butterfly),
+      // particleTexture.needsUpdate = true,
+ 
+      sizeBase    : 0.4,
+      sizeSpread  : 0.1,
+      // colorBase   : new THREE.Vector3(360, 100, 100), // H,S,L
+      // colorSpread : new THREE.Vector3(0.00, 0.0, 0.2),
+      // opacityBase : 1,
+ 
+      particlesPerSecond : 10000,
+      particleDeathAge   : 1.0,  
+      emitterDeathAge    : 60
+     };
+     
+        engine = new ParticleEngine();
+ engine.setValues( settings );
+ engine.initialize();
+     
+     
+   
+    //render scene
+    var render = function () {
+     requestAnimationFrame(render);
+     renderer.render(scene, camera);
+      
+     engine.update( 0.01 * 0.5 );
+    };
+       
+    render();
+     
+     
+       
+   });
+      
+  </script>
+     
+ </head>
+ <body style="background: black">
+     
+  <div id="canvas-container" style="position: absolute; left:0px; top:0px"></div>
+     
+ </body>
+</html>

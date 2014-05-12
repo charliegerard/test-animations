@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Particles - Three.js</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="three.min.js"></script>
+	<script src="images/butterflyData.js"></script>
+	<script src="images/butterflySecond_data.js"></script>
+	<script src="images/blueButterfly_Data.js"></script>
+</head>
+<body>
+<!-- Add RequestAnimationFrame thing -->
+	<div id="container"></div>
+
+	<script>
+	 	var camera, scene, renderer,
+
+	 	mouseX = 0, mouseY = 0,
+
+	 	particles = []
+
+	 	init();
+
+	 	function init(){
+
+	 		container = document.getElementById( 'container' );
+
+	 		camera = new THREE.PerspectiveCamera(80, window.innerWidth / window.innerHeight, 1, 2000);
+
+	 		camera.position.z = 1000;
+
+	 		scene = new THREE.Scene();
+
+	 		scene.add(camera);
+
+	 		renderer = new THREE.CanvasRenderer();
+	 		renderer.setSize(window.innerWidth, window.innerHeight);
+
+	 		document.body.appendChild(renderer.domElement);
+
+	 		makeParticles();
+
+	 		document.addEventListener('mousemove', onMouseMove, false);
+
+	 		// requestAnimationFrame
+	 		setInterval(update, 1000/30);
+	 	}
+
+	 	function onMouseMove(event) {
+	 		// store the mouseX and mouseY position
+	 		mouseX = event.clientX;
+	 		mouseY = event.clientY;
+	 	}
+
+	 	function update(){
+	 		updateParticles();
+
+	 		renderer.render(scene, camera);
+	 	}
+
+ 		function makeParticles(){
+	 		var particle, material, texture;
+
+	 		for (var zpos = -1000; zpos < 1000; zpos+=50){
+
+	 			texture = new THREE.Texture(blue_butterfly);
+	 			texture.needsUpdate = true;
+	 				 	
+	 			material = new THREE.ParticleBasicMaterial({map: texture, 
+	 				program: particleRender,
+	 			 // blending: THREE.AdditiveBlending,
+	 			// depthTest: false
+	 			});
+
+	 			particle = new THREE.Particle(material);
+
+	 			particle.position.x = Math.random() * 1000 - 500;
+	 			particle.position.y = Math.random() * 1000 - 500;
+
+	 			particle.position.z = zpos;
+
+	 			particle.scale.x = particle.scale.y = 40;
+
+	 			scene.add(particle);
+
+	 			particles.push(particle);
+	 		}
+	 	}
+
+	 	function particleRender(context){
+	 		context.beginPath();
+
+	 		context.arc(0,0,1,0, Math.PI * 2, true);
+	 		context.fill();
+	 	}
+
+	 	function updateParticles(){
+	 		for(var i=0; i < particles.length; i++){
+	 			particle = particles[i];
+
+	 			particle.position.z += mouseY *0.2;
+
+	 			if(particle.position.z >1000) particle.position.z -=2000;
+	 		}
+	 	}
+
+	 </script>
+
+</body>
+</html>
