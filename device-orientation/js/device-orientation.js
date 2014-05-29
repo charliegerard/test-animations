@@ -22,7 +22,6 @@ $(document).ready(function(){
 				marginTop: 10 * event.originalEvent.beta
 			})
 		}
-
 		drawCircle();
 		ballFall();
 	});
@@ -40,7 +39,5 @@ $(document).ready(function(){
 
 	if(parseInt($('#score').html()) == 1){
 	 	$('#platform').html("Yeah")
-	 	console.log("Yeah")
 	}
-
 });
