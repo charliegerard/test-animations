@@ -37,7 +37,7 @@ $(document).ready(function(){
 	});
 
 	var counter = 0;
-	var score = $('#score').html(counter);
+	var score = parseInt($('#score').html(counter));
 
 	var ballFall = function(){
 		//Checks if the coordinates of the ball match the ones of the hole.
@@ -45,11 +45,14 @@ $(document).ready(function(){
 		  ((parseInt($('#circle')[0].offsetTop) >= parseInt($('#hole')[0].offsetTop) && parseInt($('#circle')[0].offsetTop) <= parseInt($('#hole')[0].offsetTop) + 100))){
 		 	drawHole();
 		 	counter++;
-		 	var score = $('#score').html(counter);
+		 	$('#score').html(counter)
+		 	score = parseInt($('#score').html()[0]);
+
+		 	if(score >= 10){
+	 			//$('#platform').append("<p>" + 'CONGRATS! There\'s actually nothing there but at least you got to play!' + "</p>")
+	 			alert("CONGRATS! There's actually nothing here but at least you got to play!")
+			}
 		}
 	}
 
-	if(parseInt($('#score').html()) === 10){
-	 	$('#platform').append("Yeah")
-	}
 });

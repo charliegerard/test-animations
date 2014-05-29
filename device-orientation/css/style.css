@@ -20,8 +20,6 @@ body{
 #circle{
 	width: 70px;
 	height: 70px;
-	/*background-color: pink;
-	border: 5px solid black;*/
 	border-radius: 50%;
 	position: absolute;
 	z-index: 10;
@@ -38,6 +36,15 @@ body{
 	background-color: #bbb;
 	border: 10px solid black;
 	box-shadow: 0px 5px 20px black;
+}
+
+#platform p{
+	font-size: 50px;
+	color: pink;
+	display: block;
+	margin: 0 auto;
+	width: 100%;
+	text-align: center;
 }
 
 #hole{
@@ -60,6 +67,7 @@ body{
 	font-weight: bold;
 	color: white;
 	text-align: center;
+	margin: 0 1%;
 }
 
 #container{
