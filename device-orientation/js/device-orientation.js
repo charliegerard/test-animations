@@ -1,14 +1,19 @@
 $(document).ready(function(){
+	var platformTop = $('#platform')[0].offsetTop;
+	var platformHeight = $('#platform')[0].offsetHeight;
+	var platformWidth = $('#platform')[0].offsetWidth;
 
-	var drawWhole = function(){
+	var drawHole = function(){
 		//Creates a new whole at random coordinates on the page on each page load.
-		$('#whole').css({
-			left: Math.floor(Math.random() * (window.innerWidth - 100)),
-			top: Math.floor(Math.random() * (window.innerHeight - 100))
+		$('#hole').css({
+			left: (Math.floor(Math.random() * (platformWidth))) + 'px',
+			// top: Math.floor(Math.random() * (window.innerHeight - 500))
+			// top: Math.floor(Math.random() * (window.innerHeight - (platformTop + 70) ))
+			'bottom': (Math.floor(Math.random() * platformHeight - 50)) + 'px'
 		})
 	}
 
-	drawWhole();
+	drawHole();
 
 	if(! window.DeviceOrientationEvent){
 		return;
@@ -30,14 +35,16 @@ $(document).ready(function(){
 	var score = $('#score').html(counter);
 
 	var ballFall = function(){
-		if((parseInt($('#circle')[0].style.marginLeft) >= parseInt($('#whole')[0].offsetLeft) && parseInt($('#circle')[0].style.marginLeft) <= parseInt($('#whole')[0].offsetLeft) + 80) && (parseInt($('#circle')[0].style.marginTop) >= parseInt($('#whole')[0].offsetTop) && (parseInt($('#circle')[0].style.marginTop) <= parseInt($('#whole')[0].offsetTop) + 80))){
-		 	drawWhole();
+		//Checks if the coordinates of the ball match the ones of the hole.
+		if((parseInt($('#circle')[0].style.marginLeft) >= parseInt($('#hole')[0].offsetLeft) && parseInt($('#circle')[0].style.marginLeft) <= parseInt($('#hole')[0].offsetLeft) + 100) && 
+		  ((parseInt($('#circle')[0].offsetTop) >= parseInt($('#hole')[0].offsetTop) && parseInt($('#circle')[0].offsetTop) <= parseInt($('#hole')[0].offsetTop) + 100))){
+		 	drawHole();
 		 	counter++;
 		 	var score = $('#score').html(counter);
 		}
 	}
 
-	if(parseInt($('#score').html()) == 1){
-	 	$('#platform').html("Yeah")
+	if(parseInt($('#score').html()) === 10){
+	 	$('#platform').append("Yeah")
 	}
 });
