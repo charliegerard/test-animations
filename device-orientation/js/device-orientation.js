@@ -2,14 +2,19 @@ $(document).ready(function(){
 	var platformTop = $('#platform')[0].offsetTop;
 	var platformHeight = $('#platform')[0].offsetHeight;
 	var platformWidth = $('#platform')[0].offsetWidth;
+	var platformLeft = $('#platform')[0].offsetLeft;
+	var platformRight = platformLeft + platformWidth;
+	var platformBottom = platformTop + platformHeight;
+
+	var randomNumber = function(min, max){
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	}
 
 	var drawHole = function(){
 		//Creates a new whole at random coordinates on the page on each page load.
 		$('#hole').css({
-			left: (Math.floor(Math.random() * (platformWidth))) + 'px',
-			// top: Math.floor(Math.random() * (window.innerHeight - 500))
-			// top: Math.floor(Math.random() * (window.innerHeight - (platformTop + 70) ))
-			'bottom': (Math.floor(Math.random() * platformHeight - 50)) + 'px'
+			left: randomNumber(platformLeft, platformRight - 100) + 'px',
+			top: randomNumber(platformTop, platformBottom - 100) + 'px'
 		})
 	}
 
