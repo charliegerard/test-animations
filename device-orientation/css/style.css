@@ -38,15 +38,6 @@ body{
 	box-shadow: 0px 5px 20px black;
 }
 
-#platform p{
-	font-size: 50px;
-	color: pink;
-	display: block;
-	margin: 0 auto;
-	width: 100%;
-	text-align: center;
-}
-
 #hole{
 	width: 100px;
 	height: 100px;
@@ -68,10 +59,4 @@ body{
 	color: white;
 	text-align: center;
 	margin: 0 1%;
-}
-
-#container{
-	max-width: 80%;
-	background: #bbb;
-	margin: auto;
 }

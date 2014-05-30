@@ -6,12 +6,13 @@ $(document).ready(function(){
 	var platformRight = platformLeft + platformWidth;
 	var platformBottom = platformTop + platformHeight;
 
+	//Generate a random number to redraw the hole at random coordinates every time.
 	var randomNumber = function(min, max){
 		return Math.floor(Math.random() * (max - min + 1) + min);
 	}
 
 	var drawHole = function(){
-		//Creates a new whole at random coordinates on the page on each page load.
+		//Draw a new whole randomly between the borders of the platform.
 		$('#hole').css({
 			left: randomNumber(platformLeft, platformRight - 100) + 'px',
 			top: randomNumber(platformTop, platformBottom - 100) + 'px'
@@ -21,11 +22,12 @@ $(document).ready(function(){
 	drawHole();
 
 	if(! window.DeviceOrientationEvent){
+		alert("It seems like your device or browser does not support device orientation :/")
 		return;
 	}
 
 	$(window).on('deviceorientation', function(event){
-		//console.log(event.originalEvent.alpha, event.originalEvent.beta, event.originalEvent.gamma);
+		//Change the coordinates of the ball on device orientation.
 		var drawCircle = function(){
 			$('#circle').css({
 				marginLeft: 10 * event.originalEvent.gamma,
@@ -40,7 +42,7 @@ $(document).ready(function(){
 	var score = parseInt($('#score').html(counter));
 
 	var ballFall = function(){
-		//Checks if the coordinates of the ball match the ones of the hole.
+		//Checks if the coordinates of the ball match the ones of the hole and if so, increase the counter by 1.
 		if((parseInt($('#circle')[0].style.marginLeft) >= parseInt($('#hole')[0].offsetLeft) && parseInt($('#circle')[0].style.marginLeft) <= parseInt($('#hole')[0].offsetLeft) + 100) && 
 		  ((parseInt($('#circle')[0].offsetTop) >= parseInt($('#hole')[0].offsetTop) && parseInt($('#circle')[0].offsetTop) <= parseInt($('#hole')[0].offsetTop) + 100))){
 		 	drawHole();
@@ -48,11 +50,11 @@ $(document).ready(function(){
 		 	$('#score').html(counter)
 		 	score = parseInt($('#score').html()[0]);
 
+		 	//Pop an alert if the user reached a score of 10.
+		 	//TODO: Make something else happen in the future.
 		 	if(score >= 10){
-	 			//$('#platform').append("<p>" + 'CONGRATS! There\'s actually nothing there but at least you got to play!' + "</p>")
 	 			alert("CONGRATS! There's actually nothing here but at least you got to play!")
 			}
 		}
 	}
-
 });
