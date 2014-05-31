@@ -1,5 +1,6 @@
 $(document).ready(function(){
 	var movingCat = $('#shooting_cat');
+	var dancingCatArray = $('.dancingCats')
 
 	//Sound
 	var catSound = new Audio("http://www.kessels.com/CatSounds/kitten4.wav");
@@ -48,8 +49,8 @@ $(document).ready(function(){
 		}
 	});
 
- 	//Laser starts when the user clicks on the cat
-	$('#shooting_cat').click(function(){
+ 	//Laser starts when the user clicks anywhere on the window
+	$(window).click(function(){
 	 	var e = window.event;
 	 	var newPosX = (e.clientX);
 	 	var newPosY = e.clientY;
@@ -73,7 +74,8 @@ $(document).ready(function(){
 	 	for(i = 0; i <= 7; i++){
 	 		if (hitsCat(i, newPosX)) {
 	 			setTimeout(function () {
-		 			$(dancingCatArray[i]).hide();
+	 				//Hide the cat that's just been shot.
+		 			$($('.dancingCats')[i]).hide()
 		 			catSound.play(); 
 		 		}, 200); 
 		 		/*As below loop will return true or false as soon as the laser is shot, 
@@ -87,12 +89,14 @@ $(document).ready(function(){
 	//Function that checks if a cat is hit or not.
 	//laserLeft refers to newPosX
 	var hitsCat = function (i, laserLeft) {
-		var $cat = $(dancingCatArray[i]);
-		var catLeft = parseInt($cat.css('left'));
-		var catRight = catLeft + $cat.width();
-		if ($cat.is(':hidden')) {
-			return false; // Already dead, no need to do anything.
-		}
+		//var dancingCatArray = $('.dancingCats')
+		var $cat = $('.dancingCats')[i];
+		var catLeft = $cat.offsetLeft; //Left position of the cat
+		var catRight = catLeft + $cat.offsetWidth;
+
+		// if ($cat.is(':hidden')) {
+		// 	return false; // Already dead, no need to do anything.
+		// }
 		if (laserLeft >= catLeft && laserLeft <= catRight) {
 			return true; //If laser is shot between the left and right coordinates of the cat, execute the code in the for loop above.
 		}
