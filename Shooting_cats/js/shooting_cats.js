@@ -1,28 +1,32 @@
 $(document).ready(function(){
+	//movingCat refers to the one at the bottom.
 	var movingCat = $('#shooting_cat');
-	var dancingCatArray = $('.dancingCats')
+	//dancingCatArray refers to the targets.
+	var dancingCatArray = $('.dancingCats');
+
+	var counter = 0;
+	var score = $('#score').html(counter);
 
 	//Sound
 	var catSound = new Audio("http://www.kessels.com/CatSounds/kitten4.wav");
 
 	var makeCats = function () {
 		for(i = 0; i <= 7; i++){
-			//Create x number of cats 
+			//Create a certain number of cats 
 			var newCats = document.createElement("img");
-				newCats.setAttribute("src", "http://media.giphy.com/media/67j0Iy0UzvBG8/giphy.gif")
+				newCats.setAttribute("src", "http://media.giphy.com/media/67j0Iy0UzvBG8/giphy.gif");
 				$(newCats).addClass('dancingCats');
-				newCats.id = ('newCat' + i)
-				document.getElementById("cats").appendChild(newCats)
+				newCats.id = ('newCat' + i);
+				document.getElementById("cats").appendChild(newCats);
 
-				//Access left coordinate of each cat.
+				//Determines left coordinate of each cat.
 				newCats.style.left = (120 * (i+1)) + 'px';
 
 				//Helps access each cat in the cats div
-				// Store an array of cat objects, where each has the cat image as a jquery object and a speed.
+				//Store an array of cat objects, where each has the cat image as a jquery object and a speed.
 				var dancingCatArray = $('.dancingCats')
 				var catsArray = []
 				catsArray.push(newCats)
-				//console.log(catsArray[0])
 		}
 	};
 	makeCats();
@@ -49,34 +53,33 @@ $(document).ready(function(){
 		}
 	});
 
- 	//Laser starts when the user clicks anywhere on the window
+ 	//Laser starts when the user clicks anywhere on the window.
 	$(window).click(function(){
 	 	var e = window.event;
 	 	var newPosX = (e.clientX);
 	 	var newPosY = e.clientY;
 
-	 	//Create a new laser everytime the user clicks on the cat
+	 	//Create a new laser everytime the user clicks on the cat.
 	 	var newLaser = document.createElement('div')
 	 	newLaser.id = "newLaser";
 	 	$(newLaser).css('left', newPosX);
 	 	$('#body').append(newLaser);
 
-	 	//Add class but laser not moving up
+	 	//Add class to the laser so it moves upwards.
 	 	setTimeout(function () {
 		 	$(newLaser).addClass('active');
-		 }, 100);
+		}, 100);
 
-	 	//Trying to make the cats fall on the screen but doesnt work
-		// 	setTimeout(function () {
-		// 	 $(dancingCatArray).addClass('active');
-		// }, 1000);
-
+	 	//This function runs only if a cat is hit.
 	 	for(i = 0; i <= 7; i++){
 	 		if (hitsCat(i, newPosX)) {
 	 			setTimeout(function () {
 	 				//Hide the cat that's just been shot.
-		 			$($('.dancingCats')[i]).hide()
+		 			$($('.dancingCats')[i]).hide();
 		 			catSound.play(); 
+		 			//Increment the score by 1 every time a cat dies.
+		 			counter++;
+		 			$('#score').html(counter);
 		 		}, 200); 
 		 		/*As below loop will return true or false as soon as the laser is shot, 
 		 		and not when the laser actually touches the cat, play the sound a bit 
@@ -89,7 +92,6 @@ $(document).ready(function(){
 	//Function that checks if a cat is hit or not.
 	//laserLeft refers to newPosX
 	var hitsCat = function (i, laserLeft) {
-		//var dancingCatArray = $('.dancingCats')
 		var $cat = $('.dancingCats')[i];
 		var catLeft = $cat.offsetLeft; //Left position of the cat
 		var catRight = catLeft + $cat.offsetWidth;
@@ -103,56 +105,34 @@ $(document).ready(function(){
 	}
 
 	window.onload = function animateCats(){
-		//for(var x=0; x<=7; x++){
-			//$('.dancingCats')[0].style.top = '0px'
-			$('.dancingCats').css('top', 0).addClass('animated');
-			$('.dancingCats').each(function () {
-				// Save a random speed for each cat.
-				var speed = 50 + (Math.random() * 100);
-				$(this).data('speed', speed);
-			});
-			var fallingCats = function(){
-			//Makes all the cats move down at the same time
-				var test = function(){
-					var movingDown = parseInt($('.dancingCats').css('top'));
-					// var newPosition = movingDown + 100;
-					// $('.dancingCats') = newPosition + 'px'
-					//$('.dancingCats').css('top', '+=100');
-					$('.dancingCats').each(function () {
-						$(this).css('top', '+=' + $(this).data('speed'));
-					});
-					  if(movingDown > (window.innerHeight * 1.5)){
-					     	//clearInterval(fallingCatsTimer)
-					    $('.dancingCats').remove();
-						makeCats();
-						animateCats();
-							// $('.dancingCats').removeClass('animated').css('top', -300);
-							// setTimeout(function () {
-							// 	$('.dancingCats').addClass('animated');
-							// }, 200);
-					  }
+		//Animates the cats.
+		$('.dancingCats').css('top', 0).addClass('animated');
+		$('.dancingCats').each(function () {
+			// Save a random speed for each cat.
+			var speed = 50 + (Math.random() * 100);
+			$(this).data('speed', speed);
+		});
 
-					// $.each(dancingCatArray, function(){
-					// 	//console.log(this)
-					// 	//Make the cats move down
-					// 	var movingDown = parseInt(this.style.top);
-					// 	var newPosition = movingDown + 100;
-					// 	this.style.top = newPosition + 'px'
+		var fallingCats = function(){
+		//Makes all the cats move down at the same time
+			var test = function(){
+				//Get the top coordinate of the cats.
+				var movingDown = parseInt($('.dancingCats').css('top'));
+				//Adds the speed.
+				$('.dancingCats').each(function () {
+					$(this).css('top', '+=' + $(this).data('speed'));
+				});
 
-					// 	  if(movingDown > window.innerHeight){
-					// 	     	//clearInterval(fallingCatsTimer)
-					// 			$('.dancingCats').removeClass('animated').css('top', -300);
-					// 			setTimeout(function () {
-					// 				$('.dancingCats').addClass('animated');
-					// 			}, 200);
-					// 	  }
-					// });
-				}
-				var fallingCatsTimer = window.setInterval(test, 700)
+				//If all the cats go off screen, make them restart at the top.
+				if(movingDown > (window.innerHeight * 1.5)){
+				    $('.dancingCats').remove();
+					makeCats();
+					animateCats();
+			    }
 			}
-		//}
+			var fallingCatsTimer = window.setInterval(test, 700)
+		}
 	return[fallingCats()];
-	};
-	
+	};	
 }); //End of document ready
 

@@ -29,7 +29,7 @@ body{
 .dancingCats{
 	margin-left: 20px;
 	display: inline-block;
-	max-width: 9%;
+	max-width: 7%;
 	position: absolute;
 	top: -90px;
 /*	border: 1px solid white;*/
@@ -47,5 +47,10 @@ body{
 	max-width: 960px;
 	margin: 0 auto;
 	display: block;
+}
+
+#score{
+	color: white;
+	font-size: 30px;
 }
 
