@@ -125,14 +125,50 @@ $(document).ready(function(){
 
 				//If all the cats go off screen, make them restart at the top.
 				if(movingDown > (window.innerHeight * 1.5)){
-				    $('.dancingCats').remove();
+				   $('.dancingCats').remove();
 					makeCats();
 					animateCats();
 			    }
+			 	 
 			}
 			var fallingCatsTimer = window.setInterval(test, 700)
 		}
+
+
+				// var catOut = function(i){
+				// 	console.log('function')
+				//  //	$('.dancingCats').each(function(){
+				//  	var singleCat = $('.dancingCats')[i];
+				//  	// var catTop = parseInt($(this).css('top'));
+				//  	// var catHeight = parseInt($(this).css('height'));
+				//  	var catTop = parseInt($(singleCat).css('top'));
+				//  	var catHeight = parseInt($(singleCat).css('height'));
+				//  	var catBottom = catTop + catHeight;
+				 	
+				// 	 	if( catBottom > (window.innerHeight)){
+				// 			// $(body).append("YOU DIE")	
+				// 			// alert('YOU DIE')
+				// 			// window.setTimeout()
+				// 			return true;
+				// 			console.log('catBottom is > to window')
+				// 	    } else{
+				// 	    	return false;
+				// 	    }
+				// 	//});
+				// }
+
+				// for(i = 0; i <= 7; i++){
+	 		// 		if (catOut(i)) {
+	 		// 			setTimeout(function () {
+	 		// 				$(body).append("YOU DIE");
+	 		// 				// clearInterval(catOut);
+		 	// 			}); 
+	 		// 		break;
+	 		// 		}
+	 		// 	}
+
 	return[fallingCats()];
+
 	};	
 }); //End of document ready
 

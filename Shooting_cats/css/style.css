@@ -1,5 +1,6 @@
 body{
-	background-image: url('http://i1282.photobucket.com/albums/a535/libbytubbergen/Portfolio%20Project%20Three-Grumpy%20Cat%20of%20the%20Universe/galaxy_by_jayce76-d4mkyq7_zps0ec30217.png');
+	/*background-image: url('http://i1282.photobucket.com/albums/a535/libbytubbergen/Portfolio%20Project%20Three-Grumpy%20Cat%20of%20the%20Universe/galaxy_by_jayce76-d4mkyq7_zps0ec30217.png');*/
+	background-image: url('../image/space-background.jpg');
 	background-size: cover;
 }
 
