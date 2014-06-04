@@ -1,10 +1,9 @@
 #Animations
 
-###Tests using mainly HTML5 canvas, two.js and three.js but also the tween.js and createjs libraries.
+This repo gathers a few personal projects that I'm working on to get started with some libraries.
+It is mainly about animations using HTML5 canvas, Two.js, Three.js, Processing, etc...
 
-I have just been writing small samples of code to understand how these libraries work and getting to know their syntax.
-
-You can find more about them here:
+You can find more about these here:
 
 - two.js: http://jonobr1.github.io/two.js/
 - three.js: http://threejs.org/
