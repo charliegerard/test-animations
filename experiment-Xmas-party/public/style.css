@@ -1,0 +1,59 @@
+body{
+  background-color: black;
+}
+
+#container{
+  width: 100%;
+  height: 40em;
+  position: absolute;
+  z-index: 10;
+}
+
+svg{
+  position: absolute;
+  z-index: -1;
+}
+
+@-webkit-keyframes heartbeat{
+	0%     { -webkit-transform:scale(.75,.75); }
+	/*16%    { -webkit-transform:scale(1,1); }
+  33%    { -webkit-transform:scale(.75,.75); }*/
+  50%    { -webkit-transform:scale(1,1); }
+	100%   { -webkit-transform:scale(.75,.75); }
+}
+/*@-moz-keyframes heartbeat{
+	0%     { -moz-transform:scale(.75,.75); }
+	16%    { -moz-transform:scale(1,1); }
+  33%    { -moz-transform:scale(.75,.75); }
+  49%    { -moz-transform:scale(1,1); }
+	100%   { -moz-transform:scale(.75,.75); }
+}
+@keyframes heartbeat{
+	0%     { transform:scale(.75,.75); }
+	16%    { transform:scale(1,1); }
+  33%    { transform:scale(.75,.75); }
+  49%    { transform:scale(1,1); }
+	100%   { transform:scale(.75,.75); }
+}*/
+.heartbeat{
+	width:30px;
+	height:30px;
+	-webkit-border-radius:30px;
+	-moz-border-radius:30px;
+	border-radius:30px;
+	/*background-color:rgba(200,0,0,.5);*/
+	-webkit-animation:heartbeat .8s infinite;
+	animation:heartbeat .8s infinite;
+
+  margin: 100px auto;
+}
+
+.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+.link {
+  stroke: #999;
+  stroke-opacity: .6;
+}

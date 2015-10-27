@@ -1,0 +1,16 @@
+{
+  "name": "tw-xmas-party",
+  "version": "1.0.0",
+  "description": "Interactive installation",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Charlie Gerard",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3",
+    "jsonfile": "^2.2.3",
+    "socket.io": "^1.3.7"
+  }
+}
