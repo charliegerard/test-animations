@@ -82,7 +82,7 @@ $(document).ready(function(){
   }
 
   var testGraph = function(){
-    d3.json("miserables.json", function(error, graph) {
+    d3.json("graph.json", function(error, graph) {
       var width = 960,
         height = 500;
 
