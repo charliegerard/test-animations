@@ -142,7 +142,7 @@ $(document).ready(function(){
 
         node = node.data(graph.nodes);
         node.enter().append("circle").attr("class", "node").attr("r", function(){
-          return this === node[0][0] ? 30 : 10
+          return this === node[0][0] ? 15 : Math.floor(Math.random() * (30 - 5) + 5)
         });
         node.exit().remove();
 
@@ -152,6 +152,9 @@ $(document).ready(function(){
       function tick() {
         node.attr("cx", function(d) { return d.x; })
             .attr("cy", function(d) { return d.y; })
+            .attr('fill', function(){
+              return 'white'
+            })
 
         link.attr("x1", function(d) { return d.source.x; })
             .attr("y1", function(d) { return d.source.y; })
