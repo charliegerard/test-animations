@@ -86,7 +86,7 @@ $(document).ready(function(){
       var width = 960,
         height = 500;
 
-      var color = d3.scale.category10();
+      var color = d3.scale.category20();
 
       var nodes = [],
           links = [];
@@ -95,7 +95,8 @@ $(document).ready(function(){
           .nodes(graph.nodes)
           .links(graph.links)
           .charge(-400)
-          .linkDistance(120)
+          .linkDistance(function(){
+            return Math.floor(Math.random() * (300 - 100) + 100)})
           .size([width, height])
           .on("tick", tick);
 
@@ -140,7 +141,9 @@ $(document).ready(function(){
         link.exit().remove();
 
         node = node.data(graph.nodes);
-        node.enter().append("circle").attr("class", "node").attr("r", 8);
+        node.enter().append("circle").attr("class", "node").attr("r", function(){
+          return this === node[0][0] ? 30 : 10
+        });
         node.exit().remove();
 
         force.start();
