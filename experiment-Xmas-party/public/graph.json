@@ -203,6 +203,10 @@
     {
       "name": "Connection 50",
       "group": 1
+    },
+    {
+      "name": "Connection 51",
+      "group": 1
     }
   ],
   "links": [
@@ -460,6 +464,11 @@
       "source": 50,
       "target": 0,
       "value": 5
+    },
+    {
+      "source": 51,
+      "target": 0,
+      "value": 10
     }
   ]
 }
