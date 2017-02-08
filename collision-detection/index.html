@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - draggable cubes</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		<script src="js/three.js"></script>
+		<script>
+
+			var container;
+			var camera, scene, renderer;
+			var objects = [];
+			var plane = new THREE.Plane();
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vector2(),
+			offset = new THREE.Vector3(),
+			intersection = new THREE.Vector3(),
+			INTERSECTED, SELECTED;
+      var object;
+			var test;
+			var bodyObject;
+      var CubeGeometry, CubeGeometry2;
+      var cube, cube2;
+      var material;
+
+			init();
+			animate();
+
+			function init() {
+				container = document.createElement( 'div' );
+				document.body.appendChild( container );
+
+				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
+				// camera.position.z = 2;
+				// camera.position.y = 1;
+
+				scene = new THREE.Scene();
+
+				scene.add( new THREE.AmbientLight( 0x505050 ) );
+
+				var light = new THREE.SpotLight( 0xffffff, 1.5 );
+				light.position.set( 0, 500, 2000 );
+				light.castShadow = true;
+
+				light.shadow = new THREE.LightShadow( new THREE.PerspectiveCamera( 50, 1, 200, 10000 ) );
+				light.shadow.bias = - 0.00022;
+
+				light.shadow.mapSize.width = 2048;
+				light.shadow.mapSize.height = 2048;
+
+				scene.add( light );
+
+        CubeGeometry = new THREE.CubeGeometry( 200, 200, 200 );
+        material = new THREE.MeshNormalMaterial()
+        cube = new THREE.Mesh( CubeGeometry, material);
+        cube.position.y = 120;
+        cube.position.z = -600;
+        cube.position.x = -300;
+        objects.push(cube)
+        scene.add(cube);
+
+        CubeGeometry2 = new THREE.CubeGeometry( 200, 200, 200 );
+        material = new THREE.MeshNormalMaterial();
+        cube2 = new THREE.Mesh( CubeGeometry2, material );
+        cube2.position.y = 120;
+        cube2.position.z = -600;
+        cube2.position.x = 300;
+        objects.push(cube2);
+        scene.add(cube2);
+
+				renderer = new THREE.WebGLRenderer( { antialias: true } );
+				renderer.setClearColor( 0xf0f0f0 );
+				renderer.setPixelRatio( window.devicePixelRatio );
+				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.sortObjects = false;
+				renderer.shadowMap.enabled = true;
+				renderer.shadowMap.type = THREE.PCFShadowMap;
+
+				container.appendChild( renderer.domElement );
+
+				renderer.domElement.addEventListener( 'mousemove', onDocumentMouseMove, false );
+				renderer.domElement.addEventListener( 'mousedown', onDocumentMouseDown, false );
+				renderer.domElement.addEventListener( 'mouseup', onDocumentMouseUp, false );
+
+				window.addEventListener( 'resize', onWindowResize, false );
+			}
+
+			function onWindowResize() {
+				camera.aspect = window.innerWidth / window.innerHeight;
+				camera.updateProjectionMatrix();
+				renderer.setSize( window.innerWidth, window.innerHeight );
+			}
+
+			function onDocumentMouseMove( event ) {
+				event.preventDefault();
+
+				mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+				mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+				raycaster.setFromCamera( mouse, camera );
+
+				if ( SELECTED ) {
+					if ( raycaster.ray.intersectPlane( plane, intersection ) ) {
+
+						SELECTED.position.copy( intersection.sub( offset ) );
+
+						for(var i = 0; i  < SELECTED.geometry.vertices.length; i++){
+							var localVertex = SELECTED.geometry.vertices[i].clone();
+							var globalVertex = localVertex.applyMatrix4(SELECTED.matrixWorld);
+							var directionVector = globalVertex.sub(SELECTED.position);
+							var ray = new THREE.Raycaster(SELECTED.position, directionVector.clone().normalize());
+							var collisionResults = ray.intersectObjects([bodyObject]);
+
+							if(collisionResults.length > 0 && collisionResults[0].distance < directionVector.length()){
+								// console.log('boo')
+								console.log('COLLISION')
+							} else {
+								console.log('nothing')
+								// if(collisionResults.length <= 0){
+									// SELECTED.scale.x -= 0.05
+									// console.log(SELECTED.scale.x)
+								// }
+							}
+						}
+					}
+					return;
+				}
+
+				var intersects = raycaster.intersectObjects( objects );
+
+				if ( intersects.length > 0 ) {
+					if ( INTERSECTED != intersects[ 0 ].object ) {
+
+						INTERSECTED = intersects[ 0 ].object;
+						// INTERSECTED.currentHex = INTERSECTED.material.color.getHex();
+
+						plane.setFromNormalAndCoplanarPoint(
+							camera.getWorldDirection( plane.normal ),
+							INTERSECTED.position );
+					}
+					container.style.cursor = 'pointer';
+
+				} else {
+					INTERSECTED = null;
+					container.style.cursor = 'auto';
+				}
+			}
+
+			function onDocumentMouseDown( event ) {
+				event.preventDefault();
+
+				raycaster.setFromCamera( mouse, camera );
+
+				var intersects = raycaster.intersectObjects( objects );
+
+				if ( intersects.length > 0 ) {
+
+					SELECTED = intersects[ 0 ].object;
+
+					if ( raycaster.ray.intersectPlane( plane, intersection ) ) {
+
+						offset.copy( intersection ).sub( SELECTED.position );
+
+					}
+					container.style.cursor = 'move';
+				}
+			}
+
+			function onDocumentMouseUp( event ) {
+				event.preventDefault();
+
+				if ( INTERSECTED ) {
+					SELECTED = null;
+				}
+
+				container.style.cursor = 'auto';
+			}
+
+			function animate() {
+				requestAnimationFrame( animate );
+				render();
+			}
+
+			function render() {
+				camera.lookAt(scene)
+				renderer.render( scene, camera );
+			}
+
+		</script>
+
+	</body>
+</html>
