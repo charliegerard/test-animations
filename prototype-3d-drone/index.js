@@ -53,7 +53,8 @@ window.onload = function(){
         droneGroup.add(propellerMesh);
       }
     })
-
+    
+    droneGroup.rotation.set(0.5, -0.5,0);
     scene.add(droneGroup)
 
     renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
