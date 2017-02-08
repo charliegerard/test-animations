@@ -35,6 +35,7 @@ window.onload = function(){
     var jsonLoader = new THREE.JSONLoader();
 
     var material = new THREE.MeshLambertMaterial({color: 0xffffff});
+    material.side = THREE.DoubleSide;
 
     droneGroup = new THREE.Group();
 
