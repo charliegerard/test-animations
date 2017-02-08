@@ -23,11 +23,14 @@ window.onload = function(){
     scene = new THREE.Scene();
 
     controls = new THREE.OrbitControls(camera);
+    controls.minDistance = 30;
+    controls.maxDistance = 100;
     controls.addEventListener('change', render);
 
-    light = new THREE.DirectionalLight(0xffffff);
-    light.position.set(1,1,1);
-    scene.add(light);
+    light = new THREE.PointLight(0xffffff);
+    light.position.copy(camera.position);
+    scene.add(camera);
+    camera.add(light);
 
     var jsonLoader = new THREE.JSONLoader();
 
@@ -53,14 +56,13 @@ window.onload = function(){
         droneGroup.add(propellerMesh);
       }
     })
-    
+
     droneGroup.rotation.set(0.5, -0.5,0);
     scene.add(droneGroup)
 
     renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
     renderer.setClearColor(0x000000, 0);
     renderer.setPixelRatio(window.devicePixelRatio);
-    // renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setSize(container.offsetWidth, container.offsetHeight);
     container.appendChild(renderer.domElement);
 
