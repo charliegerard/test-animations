@@ -71,7 +71,6 @@ window.onload = function(){
   }
 
   function onWindowResize(){
-    console.log(droneGroup);
     camera.aspect = window.innerwidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.offsetWidth, container.offsetHeight);
