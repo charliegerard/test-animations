@@ -3,12 +3,12 @@ window.onload = function(){
   var droneMesh, droneGroup, propellerMesh;
   var propellerMeshes = [];
   var propellerMeshesCoordinates = [
-    {x: 18.7, y: -1.2, z: 1}, //right
-    {x: -18.7, y: -1.2, z: 1}, //left
-    {x: -9.3, y: -1.2, z: -15.3}, //back left
-    {x: 9.3, y: -1.2, z: -15.3}, //back right
-    {x: -9.3, y: -1.2, z: 17.3}, //front left
-    {x: 9.3, y: -1.2, z: 17.3} //front right
+    {x: 18.7, y: -1.1, z: 0.3}, //right
+    {x: -18.7, y: -1.1, z: 0.3}, //left
+    {x: -9.3, y: -1.1, z: -15.8}, //back left
+    {x: 9.3, y: -1.1, z: -15.8}, //back right
+    {x: -9.3, y: -1.1, z: 16.3}, //front left
+    {x: 9.3, y: -1.1, z: 16.3} //front right
   ]
 
   init();
@@ -17,7 +17,7 @@ window.onload = function(){
   function init(){
     var container = document.getElementById('container');
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
     camera.position.z = 100;
 
     scene = new THREE.Scene();
@@ -40,7 +40,7 @@ window.onload = function(){
     droneGroup = new THREE.Group();
 
     // Drone body
-    jsonLoader.load('assets/drone-body-NoPhong.json', function(object){
+    jsonLoader.load('assets/drone.json', function(object){
       droneMesh = new THREE.Mesh(object);
       droneMesh.position.set(0,-0.5,1);
       droneMesh.material = material;
@@ -48,7 +48,7 @@ window.onload = function(){
     })
 
     // Propellers
-    jsonLoader.load('assets/Propeller-NoPhong.json', function(object){
+    jsonLoader.load('assets/propeller.json', function(object){
       for(var i = 0; i < propellerMeshesCoordinates.length; i++){
         propellerMesh = new THREE.Mesh(object);
         propellerMeshes.push(propellerMesh);
@@ -71,7 +71,6 @@ window.onload = function(){
   }
 
   function onWindowResize(){
-    console.log(droneGroup);
     camera.aspect = window.innerwidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.offsetWidth, container.offsetHeight);
