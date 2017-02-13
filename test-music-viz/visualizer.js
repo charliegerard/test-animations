@@ -6,6 +6,7 @@ var LoopVisualizer = (function() {
 	var SEGMENTS = 512;
 	var VOL_SENS = 2;
 	var BIN_COUNT = 512;
+	var RINGS = 3;
 
 	var rings = [];
 	var levels = [];
@@ -17,6 +18,17 @@ var LoopVisualizer = (function() {
 	var freqByteData;
 	var timeByteData;
 
+	var numberOfSpheres = 30;
+	var radiansPerSphere = 2 * Math.PI / numberOfSpheres;
+	var pivots = [];
+	var geometry, material;
+	var pivot;
+	var meshes;
+
+	var mesh;
+	var array = new Array();
+	var boost = 0;
+	var meshesArray = [];
 
 	function init() {
 
@@ -27,88 +39,61 @@ var LoopVisualizer = (function() {
 		////////INIT audio in
 		freqByteData = new Uint8Array(analyser.frequencyBinCount);
 		timeByteData = new Uint8Array(analyser.frequencyBinCount);
-
+		array = new Uint8Array(analyser.frequencyBinCount);
 
 		//create ring geometry
 		var loopShape = new THREE.Shape();
 		loopShape.absarc( 0, 0, INIT_RADIUS, 0, Math.PI*2, false );
-
 		loopGeom = loopShape.createPointsGeometry(SEGMENTS/2);
 		loopGeom.dynamic = true;
 
 		//create rings
 		scene.add(loopHolder);
 		var scale = 1;
-
-    var material = new THREE.MeshNormalMaterial();
+    material = new THREE.MeshNormalMaterial();
 
     // Circle made of cubes.
-        // geometry
-    var geometry = new THREE.BoxGeometry(1, 1, 1, 0, Math.PI * 2, 0, Math.PI * 2)
-      // material
-    var material = new THREE.MeshBasicMaterial({
-      color: 0xfff000,
-      wireframe: false
-    });
-
-    // parent
+    geometry = new THREE.BoxGeometry(0.5, 0.5, 0.5, 0, Math.PI * 2, 0, Math.PI * 2);
     parent = new THREE.Object3D();
     scene.add(parent);
-    var numberOfSpheres = 10;
-    var radiansPerSphere = 2 * Math.PI / numberOfSpheres;
-    // pivots
-    var pivots = [];
-    for (var i = 0; i < numberOfSpheres; i++) {
-      var pivot = new THREE.Object3D();
-      pivot.rotation.z = i * radiansPerSphere;
-      parent.add(pivot);
-      pivots.push(pivot);
-    }
 
-    var meshes = pivots.map((pivot) => {
-      var mesh = new THREE.Mesh(geometry, material);
-      mesh.position.y = 5;
-      pivot.position.z = 550;
-      pivot.add(mesh)
-      return mesh;
-    });
+		for(var y = 0; y < RINGS; y++){
+			createRing(y + 1);
+		}
 
     // End
 
-
-
 		for(var i = 0; i < RINGCOUNT; i++) {
-
-      for(var j = 0; j < 10; j++){
-        var geometry = new THREE.BoxGeometry(1,1,1);
-        var cube = new THREE.Mesh(geometry, material);
-        rings.push(cube);
-        cube.scale.x *= 1.05;
-        cube.scale.y *= 1.05;
-        cube.position.set(0, 5, 570);
-        loopHolder.add(cube);
-      }
-
-			var m = new THREE.LineBasicMaterial( { color: 0xffffff,
-				linewidth: 1 ,
-				opacity : 0.7,
-				blending : THREE.AdditiveBlending,
-				depthTest : false,
-				transparent : true
-			});
-
-			var line = new THREE.Line( loopGeom, m);
 
 			// rings.push(line);
 			scale *= 1.05;
-			line.scale.x = scale;
-			line.scale.y = scale;
 			// loopHolder.add(line);
 
 			levels.push(0);
 			colors.push(0);
-
 		}
+	}
+
+	function createRing(position){
+
+		for (var i = 0; i < numberOfSpheres; i++) {
+			pivot = new THREE.Object3D();
+			pivot.rotation.z = i * radiansPerSphere;
+			parent.add(pivot);
+			pivots.push(pivot);
+		}
+
+		meshes = pivots.map((pivot) => {
+			mesh = new THREE.Mesh(geometry, material);
+			mesh.position.y = 0.5 * position;
+			pivot.position.z = 580;
+			pivot.add(mesh);
+			rings.push(mesh);
+			// loopHolder.add(mesh);
+			// loopHolder.position.set(0,0,550)
+			meshesArray.push(mesh);
+			return mesh;
+		});
 
 	}
 
@@ -122,8 +107,15 @@ var LoopVisualizer = (function() {
 
 	function update() {
 
-		analyser.getByteFrequencyData(freqByteData);
-		analyser.getByteTimeDomainData(timeByteData);
+		// analyser.getByteFrequencyData(freqByteData);
+		// analyser.getByteTimeDomainData(timeByteData);
+
+		analyser.getByteFrequencyData(array);
+
+		for(var i = 0; i < array.length; i++){
+			boost += array[i];
+		}
+		boost = (boost / array.length);
 
 		//add a new average volume onto the list
 		var sum = 0;
@@ -141,10 +133,21 @@ var LoopVisualizer = (function() {
 		colors.push(n);
 		colors.shift(1);
 
+		var k = 0;
 		//write current waveform into all rings
-		for(var j = 0; j < SEGMENTS; j++) {
-			loopGeom.vertices[j].z = timeByteData[j]*2;//stretch by 2
-		}
+		// for(var j = 0; j < SEGMENTS; j++) {
+			// loopGeom.vertices[j].z = timeByteData[j]*2;//stretch by 2
+
+			for( var x = 0; x < meshesArray.length; x++){
+				//test
+				var scale = (array[k]  + boost) / 20;
+				meshesArray[x].scale.z = (scale < 1 ? 1 : scale);
+				// meshesArray[x].position.x = (scale < 1 ? 1 : scale);
+				// meshesArray[x].position.y = (scale < 1 ? 1 : scale);
+				k += (k < array.length ? 1 : 0);
+			}
+
+		// }
 		// link up last segment
 		loopGeom.vertices[SEGMENTS].z = loopGeom.vertices[0].z;
 		loopGeom.verticesNeedUpdate = true;
@@ -156,9 +159,8 @@ var LoopVisualizer = (function() {
 			// rings[i].material.color.setHSL(hue, 1, normLevel);
 			// rings[i].material.linewidth = normLevel*3;
 			// rings[i].material.opacity = normLevel;
-			rings[i].scale.z = normLevel;
+			// rings[i].scale.z = normLevel;
 		}
-
 	}
 
 	return {

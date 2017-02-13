@@ -9,6 +9,7 @@ var source;
 var analyser;
 var xhr;
 var started = false;
+var controls;
 
 $(document).ready(function() {
 		init();
@@ -27,6 +28,7 @@ function init() {
 		antialias : false,
 		sortObjects : false
 	});
+	controls = new THREE.OrbitControls(camera, renderer.domElement);
 	renderer.setSize(window.innerWidth, window.innerHeight);
 
 	container.appendChild(renderer.domElement);
@@ -121,11 +123,13 @@ function onWindowResize(event) {
 
 function animate() {
 	requestAnimationFrame(animate);
+	controls.update();
 	render();
 }
 
 function render() {
 	LoopVisualizer.update();
+	controls.update();
 
 	var xrot = mouseX/window.innerWidth * Math.PI*2 + Math.PI;
 	var yrot = mouseY/window.innerHeight* Math.PI*2 + Math.PI;
