@@ -55,15 +55,17 @@ var LoopVisualizer = (function() {
 		meshes = pivots.map((pivot) => {
 			mesh = new THREE.Mesh(geometry, material);
 			mesh.position.y = 0.6 * position;
+			// mesh.scale.z = 0;
+			// pivot.position.z = 800;
 			pivot.position.z = 580;
 			pivot.add(mesh);
 			rings.push(mesh);
 			// loopHolder.add(mesh);
-			// loopHolder.position.set(0,0,550)
+			// loopHolder.position.set(0,0,550);
+			// mesh.geometry.applyMatrix( new THREE.Matrix4().makeTranslation( 0, 0, - 0.2 / 2 ) );
 			meshesArray.push(mesh);
 			return mesh;
 		});
-
 	}
 
 	function remove() {
@@ -75,7 +77,6 @@ var LoopVisualizer = (function() {
 	}
 
 	function update() {
-			console.log(pivots.length);
 		analyser.getByteFrequencyData(freqByteData);
 
 		for(var i = 0; i < freqByteData.length; i++){
@@ -87,10 +88,18 @@ var LoopVisualizer = (function() {
 		for( var x = 0; x < meshesArray.length; x++){
 			//test
 			var scale = (freqByteData[k]  + boost) / 20;
+			// meshesArray[x].scale.z = (scale < 1 ? 1 : scale);
 			meshesArray[x].scale.z = (scale < 1 ? 1 : scale);
-			// meshesArray[x].position.x += 0.01;
-			// meshesArray[x].position.y += 0.01;
+			// meshesArray[x].translateZ(scale/2);
+			// meshesArray[x].geometry.parameters.height = (scale < 1 ? 1 : scale);
+			meshesArray[x].position.x += 0.01;
+			meshesArray[x].position.y += 0.01;
 			k += (k < freqByteData.length ? 1 : 0);
+
+			if(meshesArray[x].position.x > 1){
+				meshesArray[x].position.x = 0;
+				meshesArray[x].position.y = 0;
+			}
 		}
 	}
 
