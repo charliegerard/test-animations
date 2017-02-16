@@ -24,7 +24,6 @@ var LoopVisualizer = (function() {
 	function init() {
 
 		rings = [];
-
 		////////INIT audio in
 		freqByteData = new Uint8Array(analyser.frequencyBinCount);
 		timeByteData = new Uint8Array(analyser.frequencyBinCount);
@@ -78,7 +77,7 @@ var LoopVisualizer = (function() {
 
 	function update() {
 		analyser.getByteFrequencyData(freqByteData);
-
+		// console.log(freqByteData);
 		for(var i = 0; i < freqByteData.length; i++){
 			boost += freqByteData[i];
 		}
