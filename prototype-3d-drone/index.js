@@ -1,5 +1,5 @@
 window.onload = function(){
-  var camera, controls, scene, renderer, light, material;
+  var camera, controls, scene, renderer, light, ambientLight, material;
   var droneMesh, droneGroup, propellerMesh;
   var propellerMeshes = [];
   var propellerMeshesCoordinates = [
@@ -25,16 +25,23 @@ window.onload = function(){
     controls = new THREE.OrbitControls(camera);
     controls.minDistance = 30;
     controls.maxDistance = 100;
+    controls.enablePan = false;
+    controls.enableZoom = false;
     controls.addEventListener('change', render);
 
     light = new THREE.PointLight(0xffffff);
     light.position.copy(camera.position);
+
+    ambientLight = new THREE.AmbientLight(0x404040);
+    ambientLight.position.copy(camera.position);
+
     scene.add(camera);
     camera.add(light);
+    camera.add(ambientLight);
 
     var jsonLoader = new THREE.JSONLoader();
 
-    var material = new THREE.MeshLambertMaterial({color: 0xffffff});
+    var material = new THREE.MeshLambertMaterial({color: 0x3177AB});
     material.side = THREE.DoubleSide;
 
     droneGroup = new THREE.Group();
@@ -81,9 +88,9 @@ window.onload = function(){
     controls.update();
     for(var i = 0; i < propellerMeshes.length; i++){
       if(i % 2 === 0){
-        propellerMeshes[i].rotation.y -= 0.05; //rotation clockwise
+        propellerMeshes[i].rotation.y -= 1; //rotation clockwise
       } else {
-        propellerMeshes[i].rotation.y += 0.05; //rotation counter-clockwise
+        propellerMeshes[i].rotation.y += 1; //rotation counter-clockwise
       }
     }
     render();
