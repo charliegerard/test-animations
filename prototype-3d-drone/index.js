@@ -17,14 +17,12 @@ window.onload = function(){
   function init(){
     var container = document.getElementById('container');
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
-    camera.position.z = 100;
+    camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.1, 2000);
+    camera.position.z = 60;
 
     scene = new THREE.Scene();
 
     controls = new THREE.OrbitControls(camera);
-    controls.minDistance = 30;
-    controls.maxDistance = 100;
     controls.enablePan = false;
     controls.enableZoom = false;
     controls.addEventListener('change', render);
@@ -66,6 +64,13 @@ window.onload = function(){
     })
 
     droneGroup.rotation.set(0.5, -0.5,0);
+    var originalScale = container.offsetWidth / container.offsetHeight - 0.45;
+    var minScale = 0.5;
+    var maxScale = 1.1;
+    var newScale = (originalScale <= minScale) ? minScale : (originalScale >= maxScale) ? maxScale : originalScale;
+
+    droneGroup.scale.set(newScale, newScale, newScale);
+    controls.target.set(0,0,0);
     scene.add(droneGroup)
 
     renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
@@ -78,9 +83,16 @@ window.onload = function(){
   }
 
   function onWindowResize(){
-    camera.aspect = window.innerwidth / window.innerHeight;
+    var scale = (container.offsetWidth / container.offsetHeight) - 0.45;
+    var minScale = 0.5;
+    var maxScale = 1.1;
+    var newScale = (scale <= minScale) ? minScale : (scale >= maxScale) ? maxScale : scale;
+
+    droneGroup.scale.set(newScale, newScale, newScale);
+
+    renderer.setSize( container.offsetWidth, container.offsetHeight );
+    camera.aspect	= container.offsetWidth / container.offsetHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
   }
 
   function animate(){
