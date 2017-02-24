@@ -37,29 +37,50 @@ window.onload = function(){
     camera.add(light);
     camera.add(ambientLight);
 
-    var jsonLoader = new THREE.JSONLoader();
+    // var jsonLoader = new THREE.JSONLoader();
+    var objLoader = new THREE.OBJLoader();
 
     var material = new THREE.MeshLambertMaterial({color: 0x3177AB});
     material.side = THREE.DoubleSide;
 
     droneGroup = new THREE.Group();
 
-    // Drone body
-    jsonLoader.load('assets/drone.json', function(object){
-      droneMesh = new THREE.Mesh(object);
-      droneMesh.position.set(0,-0.5,1);
-      droneMesh.material = material;
-      droneGroup.add(droneMesh);
+    objLoader.load('assets/drone.obj', function(object){
+      object.traverse(function(child){
+        if(child instanceof THREE.Mesh){
+          child.material = material;
+        }
+      })
+      object.position.set(0, -0.5, 1);
+      droneGroup.add(object);
     })
 
     // Propellers
-    jsonLoader.load('assets/propeller.json', function(object){
+    // jsonLoader.load('assets/propeller.json', function(object){
+    //   for(var i = 0; i < propellerMeshesCoordinates.length; i++){
+    //     propellerMesh = new THREE.Mesh(object);
+    //     propellerMeshes.push(propellerMesh);
+    //     propellerMeshes[i].position.set(propellerMeshesCoordinates[i].x, propellerMeshesCoordinates[i].y, propellerMeshesCoordinates[i].z);
+    //     propellerMesh.material = material;
+    //     droneGroup.add(propellerMesh);
+    //   }
+    // })
+
+    objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
       for(var i = 0; i < propellerMeshesCoordinates.length; i++){
-        propellerMesh = new THREE.Mesh(object);
-        propellerMeshes.push(propellerMesh);
+        propellerObject.traverse(function(child){
+          console.log('child', propellerObject);
+          console.log(propellerMeshesCoordinates.length);
+          if(child instanceof THREE.Mesh){
+              // propellerMeshes.push(child);
+              propellerMeshes.push(child);
+              child.material = material;
+              droneGroup.add(child);
+          }
+        })
+        // propellerMeshes.push(child);
         propellerMeshes[i].position.set(propellerMeshesCoordinates[i].x, propellerMeshesCoordinates[i].y, propellerMeshesCoordinates[i].z);
-        propellerMesh.material = material;
-        droneGroup.add(propellerMesh);
+        // droneGroup.add(propellerObject);
       }
     })
 
@@ -100,9 +121,9 @@ window.onload = function(){
     controls.update();
     for(var i = 0; i < propellerMeshes.length; i++){
       if(i % 2 === 0){
-        propellerMeshes[i].rotation.y -= 1; //rotation clockwise
+        // propellerMeshes[i].rotation.y -= 1; //rotation clockwise
       } else {
-        propellerMeshes[i].rotation.y += 1; //rotation counter-clockwise
+        // propellerMeshes[i].rotation.y += 1; //rotation counter-clockwise
       }
     }
     render();

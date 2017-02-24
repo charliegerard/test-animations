@@ -4,9 +4,6 @@
  * @author angelxuanchang
  */
 
-var THREE = require('threejs');
-
-
 THREE.MTLLoader = function ( manager ) {
 
 	this.manager = ( manager !== undefined ) ? manager : THREE.DefaultLoadingManager;
