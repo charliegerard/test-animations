@@ -38,7 +38,7 @@ window.onload = function(){
     camera.add(ambientLight);
 
     // var jsonLoader = new THREE.JSONLoader();
-    var objLoader = new THREE.OBJLoader();
+    var objLoader = new THREE.OBJLoader(manager);
 
     var material = new THREE.MeshLambertMaterial({color: 0x3177AB});
     material.side = THREE.DoubleSide;
@@ -66,23 +66,43 @@ window.onload = function(){
     //   }
     // })
 
+    var manager = new THREE.LoadingManager();
+    manager.onProgress = function ( item, loaded, total ) {
+      console.log( item, loaded, total );
+    };
+
+    var onProgress = function ( xhr ) {
+      if ( xhr.lengthComputable ) {
+        var percentComplete = xhr.loaded / xhr.total * 100;
+        console.log( Math.round(percentComplete, 2) + '% downloaded' );
+
+        if(Math.round(percentComplete, 2) === 100){
+          console.log('done');
+          // execute when propeller finished to load
+          console.log(propellerMeshes);
+        }
+      }
+    };
+
+    var onError = function ( xhr ) {
+    };
+
     objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
-      for(var i = 0; i < propellerMeshesCoordinates.length; i++){
+      // for(var i = 0; i < propellerMeshesCoordinates.length; i++){
         propellerObject.traverse(function(child){
-          console.log('child', propellerObject);
-          console.log(propellerMeshesCoordinates.length);
           if(child instanceof THREE.Mesh){
               // propellerMeshes.push(child);
-              propellerMeshes.push(child);
               child.material = material;
-              droneGroup.add(child);
+              // propellerMeshes.push(child);
           }
         })
-        // propellerMeshes.push(child);
-        propellerMeshes[i].position.set(propellerMeshesCoordinates[i].x, propellerMeshesCoordinates[i].y, propellerMeshesCoordinates[i].z);
+        propellerMeshes.push(child);
+        console.log('not getting here', propellerMeshes.length);
+        // propellerMeshes[i].position.set(propellerMeshesCoordinates[i].x, propellerMeshesCoordinates[i].y, propellerMeshesCoordinates[i].z);
         // droneGroup.add(propellerObject);
-      }
-    })
+      // }
+    }, onProgress, onError);
+
 
     droneGroup.rotation.set(0.5, -0.5,0);
     var originalScale = container.offsetWidth / container.offsetHeight - 0.45;
