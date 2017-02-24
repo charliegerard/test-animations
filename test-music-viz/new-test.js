@@ -121,5 +121,121 @@ function update(){
   newRadius = radius + (scale < 1 ? 1 : scale);
 
   k += (k < freqByteData.length ? 1 : 0);
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// to 32 <= FFTSIZE=2^n <= 2048. Note: in standard mode, the number of bars visible in the circle is FFTSIZE / 2. In Symmetry mode, the number of bars is equal to FFTSIZE.
+// var FFTSIZE = 128;
+var FFTSIZE = 256;
+
+var audio = {
+  buffer: {},
+  compatibility: {},
+  file: "http://s.cdpn.io/1715/the_xx_-_intro.mp3",
+  proceed: true,
+  playing: true,
+  source: {}
+};
+
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioCtx = new AudioContext();
+
+var oscillator = audioCtx.createOscillator();
+var gainNode = audioCtx.createGain();
+
+function loadSound(url) {
+  var request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  request.responseType = 'arraybuffer';
+
+  // Decode asynchronously
+  request.onload = function() {
+    context.decodeAudioData(request.response, function(buffer) {
+      dogBarkingBuffer = buffer;
+    }, onError);
+  }
+  request.send();
+}
+
+loadSound(audio.file);
+
+function playSound(buffer) {
+  var source = context.createBufferSource(); // creates a sound source
+  source.buffer = buffer;                    // tell the source which sound to play
+  source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+  source.start(0);                           // play the source now
+                                             // note: on older systems, may have to use deprecated noteOn(time);
+}
+
+
+
+audio.context = new window.AudioContext();
+audio.analyser = audio.context.createAnalyser();
+audio.analyser.fftSize = FFTSIZE;
+
+var playButton = document.getElementById('play-button');
+
+if (audio.proceed) {
+  (function() {
+    var req = new XMLHttpRequest();
+    req.open('GET', audio.file, true);
+    req.responseType = 'arraybuffer';
+    req.onload = function() {
+      audio.context.decodeAudioData(
+        req.response,
+        function(buffer) {
+          console.log('booooo');
+          audio.buffer = buffer;
+          audio.source = {};
+        },
+        function() {
+          alert('Error decoding audio "' + audio.file + '".');
+        }
+      );
+    };
+    req.send();
+  })();
+}
+
+playButton.onclick = function(){
+  audio.play();
+}
+
+//-----------------
+// Audio Functions
+//-----------------
+audio.play = function() {
+  audio.playing = true;
+  audio.source = audio.context.createBufferSource();
+  audio.source.buffer = audio.buffer;
+  audio.source.connect(audio.analyser);
+  audio.analyser.connect(audio.context.destination);
+  audio.start();
+  // audio.source[audio.compatibility.start](0);
+};
+
+audio.stop = function() {
+  // audio.source[audio.compatibility.stop](0);
+  audio.playing = false;
+  audio.source._startTime = audio.source.currentTime;
+};
