@@ -11,7 +11,8 @@ window.onload = function(){
     {x: 9.3, y: -1.1, z: 16.3} //front right
   ]
 
-  var objLoader, manager;
+  var objLoader, manager, mtlLoader, jsonLoader;
+  var speed = 0.03;
 
   init();
   animate();
@@ -39,7 +40,7 @@ window.onload = function(){
     camera.add(light);
     camera.add(ambientLight);
 
-    // var jsonLoader = new THREE.JSONLoader();
+    jsonLoader = new THREE.JSONLoader();
     manager = new THREE.LoadingManager();
     objLoader = new THREE.OBJLoader(manager);
 
@@ -66,16 +67,6 @@ window.onload = function(){
       scene.add(droneGroup);
     }
 
-    // droneGroup.rotation.set(0.5, -0.5,0);
-    // var originalScale = container.offsetWidth / container.offsetHeight - 0.45;
-    // var minScale = 0.5;
-    // var maxScale = 1.1;
-    // var newScale = (originalScale <= minScale) ? minScale : (originalScale >= maxScale) ? maxScale : originalScale;
-    //
-    // droneGroup.scale.set(newScale, newScale, newScale);
-    // controls.target.set(0,0,0);
-    // scene.add(droneGroup)
-
     renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
     renderer.setClearColor(0x000000, 0);
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -92,16 +83,51 @@ window.onload = function(){
   }
 
   function loadPropeller(coordinates){
-    objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
-        propellerObject.traverse(function(child){
+    // objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
+    //     propellerObject.traverse(function(child){
+    //       if(child instanceof THREE.Mesh){
+    //           child.material = material;
+    //       }
+    //     })
+    //     propellerMeshes.push(propellerObject)
+    //     propellerObject.position.set(coordinates.x,coordinates.y,coordinates.z);
+    //     droneGroup.add(propellerObject);
+    // });
+
+    mtlLoader = new THREE.MTLLoader();
+    // mtlLoader.setBaseUrl('assets/');
+    // mtlLoader.setPath( 'assets/' );
+    mtlLoader.load( '', function( materials ) {
+      materials.preload();
+      objLoader.setMaterials( materials );
+      objLoader.setPath( 'assets/' );
+      objLoader.load( 'test.obj', function ( object ) {
+        // console.log(object.children[0].material);
+        console.log(material);
+        object.traverse(function(child){
           if(child instanceof THREE.Mesh){
-              child.material = material;
+              // console.log(child.material);
+              child.material = child.material;
           }
+
         })
-        propellerMeshes.push(propellerObject)
-        propellerObject.position.set(coordinates.x,coordinates.y,coordinates.z);
-        droneGroup.add(propellerObject);
+        propellerMeshes.push(object)
+        object.position.set(coordinates.x,coordinates.y,coordinates.z);
+        droneGroup.add(object);
+      });
     });
+
+    // jsonLoader.load('assets/test-material.json', function(object){
+    //   console.log(object.materials);
+    //   for(var i = 0; i < propellerMeshesCoordinates.length; i++){
+    //     propellerMesh = new THREE.Mesh(object);
+    //
+    //     propellerMeshes.push(propellerMesh);
+    //     propellerMeshes[i].position.set(propellerMeshesCoordinates[i].x, propellerMeshesCoordinates[i].y, propellerMeshesCoordinates[i].z);
+    //     // propellerMesh.material = material;
+    //     droneGroup.add(propellerMesh);
+    //   }
+    // })
   }
 
   function loadDroneBody(){
@@ -139,6 +165,15 @@ window.onload = function(){
         propellerMeshes[i].rotation.y += 0.1; //rotation counter-clockwise
       }
     }
+    //Up/down movement
+    droneGroup.position.y += speed;
+
+    if( droneGroup.position.y >= 1 ){
+      speed = -speed;
+    } else if (droneGroup.position.y <= -1){
+      speed = -speed;
+    }
+
     render();
   }
 
