@@ -11,6 +11,8 @@ window.onload = function(){
     {x: 9.3, y: -1.1, z: 16.3} //front right
   ]
 
+  var objLoader, manager;
+
   init();
   animate();
 
@@ -38,13 +40,71 @@ window.onload = function(){
     camera.add(ambientLight);
 
     // var jsonLoader = new THREE.JSONLoader();
-    var objLoader = new THREE.OBJLoader(manager);
+    manager = new THREE.LoadingManager();
+    objLoader = new THREE.OBJLoader(manager);
 
-    var material = new THREE.MeshLambertMaterial({color: 0x3177AB});
+    material = new THREE.MeshLambertMaterial({color: 0x3177AB});
     material.side = THREE.DoubleSide;
 
     droneGroup = new THREE.Group();
 
+    loadDroneBody();
+    loadPropellers();
+
+    // Display the drone once all assets have been loaded.
+    manager.onLoad = function(){
+      droneGroup.rotation.set(0.6, -0.4, 0);
+
+      var originalScale = container.offsetWidth / container.offsetHeight - 0.9;
+      var minScale = 0.5;
+      var maxScale = 1.1;
+      var newScale = (originalScale <= minScale) ? minScale : (originalScale >= maxScale) ? maxScale : originalScale;
+
+      droneGroup.scale.set(newScale, newScale, newScale);
+
+      droneGroup.position.set(0, 0, 0);
+      scene.add(droneGroup);
+    }
+
+    // droneGroup.rotation.set(0.5, -0.5,0);
+    // var originalScale = container.offsetWidth / container.offsetHeight - 0.45;
+    // var minScale = 0.5;
+    // var maxScale = 1.1;
+    // var newScale = (originalScale <= minScale) ? minScale : (originalScale >= maxScale) ? maxScale : originalScale;
+    //
+    // droneGroup.scale.set(newScale, newScale, newScale);
+    // controls.target.set(0,0,0);
+    // scene.add(droneGroup)
+
+    renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(container.offsetWidth, container.offsetHeight);
+    container.appendChild(renderer.domElement);
+
+    window.addEventListener('resize', onWindowResize, false);
+  }
+
+  function loadPropellers(){
+    for(var i = 0; i < propellerMeshesCoordinates.length; i++){
+      loadPropeller(propellerMeshesCoordinates[i]);
+    }
+  }
+
+  function loadPropeller(coordinates){
+    objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
+        propellerObject.traverse(function(child){
+          if(child instanceof THREE.Mesh){
+              child.material = material;
+          }
+        })
+        propellerMeshes.push(propellerObject)
+        propellerObject.position.set(coordinates.x,coordinates.y,coordinates.z);
+        droneGroup.add(propellerObject);
+    });
+  }
+
+  function loadDroneBody(){
     objLoader.load('assets/drone.obj', function(object){
       object.traverse(function(child){
         if(child instanceof THREE.Mesh){
@@ -54,73 +114,6 @@ window.onload = function(){
       object.position.set(0, -0.5, 1);
       droneGroup.add(object);
     })
-
-    // Propellers
-    // jsonLoader.load('assets/propeller.json', function(object){
-    //   for(var i = 0; i < propellerMeshesCoordinates.length; i++){
-    //     propellerMesh = new THREE.Mesh(object);
-    //     propellerMeshes.push(propellerMesh);
-    //     propellerMeshes[i].position.set(propellerMeshesCoordinates[i].x, propellerMeshesCoordinates[i].y, propellerMeshesCoordinates[i].z);
-    //     propellerMesh.material = material;
-    //     droneGroup.add(propellerMesh);
-    //   }
-    // })
-
-    var manager = new THREE.LoadingManager();
-    manager.onProgress = function ( item, loaded, total ) {
-      console.log( item, loaded, total );
-    };
-
-    var onProgress = function ( xhr ) {
-      if ( xhr.lengthComputable ) {
-        var percentComplete = xhr.loaded / xhr.total * 100;
-        console.log( Math.round(percentComplete, 2) + '% downloaded' );
-
-        if(Math.round(percentComplete, 2) === 100){
-          console.log('done');
-          // execute when propeller finished to load
-          console.log(propellerMeshes);
-        }
-      }
-    };
-
-    var onError = function ( xhr ) {
-    };
-
-    objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
-      // for(var i = 0; i < propellerMeshesCoordinates.length; i++){
-        propellerObject.traverse(function(child){
-          if(child instanceof THREE.Mesh){
-              // propellerMeshes.push(child);
-              child.material = material;
-              // propellerMeshes.push(child);
-          }
-        })
-        propellerMeshes.push(child);
-        console.log('not getting here', propellerMeshes.length);
-        // propellerMeshes[i].position.set(propellerMeshesCoordinates[i].x, propellerMeshesCoordinates[i].y, propellerMeshesCoordinates[i].z);
-        // droneGroup.add(propellerObject);
-      // }
-    }, onProgress, onError);
-
-
-    droneGroup.rotation.set(0.5, -0.5,0);
-    var originalScale = container.offsetWidth / container.offsetHeight - 0.45;
-    var minScale = 0.5;
-    var maxScale = 1.1;
-    var newScale = (originalScale <= minScale) ? minScale : (originalScale >= maxScale) ? maxScale : originalScale;
-
-    droneGroup.scale.set(newScale, newScale, newScale);
-    controls.target.set(0,0,0);
-    scene.add(droneGroup)
-
-    renderer = new THREE.WebGLRenderer({antialias: true, alpha: true});
-    renderer.setClearColor(0x000000, 0);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(container.offsetWidth, container.offsetHeight);
-    container.appendChild(renderer.domElement);
-
-    window.addEventListener('resize', onWindowResize, false);
   }
 
   function onWindowResize(){
@@ -141,9 +134,9 @@ window.onload = function(){
     controls.update();
     for(var i = 0; i < propellerMeshes.length; i++){
       if(i % 2 === 0){
-        // propellerMeshes[i].rotation.y -= 1; //rotation clockwise
+        propellerMeshes[i].rotation.y -= 0.1; //rotation clockwise
       } else {
-        // propellerMeshes[i].rotation.y += 1; //rotation counter-clockwise
+        propellerMeshes[i].rotation.y += 0.1; //rotation counter-clockwise
       }
     }
     render();
