@@ -51,8 +51,8 @@ window.onload = function(){
     droneGroup = new THREE.Group();
 
     loadDroneBody();
-    loadPropellers();
-    loadDisk();
+    // loadPropellers();
+    loadPropellerDisks();
 
     // Display the drone once all assets have been loaded.
     manager.onLoad = function(){
@@ -91,13 +91,20 @@ window.onload = function(){
               child.material = material;
           }
         })
+        // propellerObject.visible = false
         propellerMeshes.push(propellerObject)
         propellerObject.position.set(coordinates.x,coordinates.y,coordinates.z);
         droneGroup.add(propellerObject);
     });
   }
 
-  function loadDisk(){
+  function loadPropellerDisks(){
+    for(var i = 0; i < propellerMeshesCoordinates.length; i++){
+      loadDisk(propellerMeshesCoordinates[i]);
+    }
+  }
+
+  function loadDisk(coordinates){
     var textureLoader = new THREE.TextureLoader();
     textureLoader.load('assets/Assets/Blur/Disk-test.png', function(tex){
       // var texture = THREE.TextureLoader('assets/Assets/Blur/Disk.png');
@@ -113,7 +120,7 @@ window.onload = function(){
         });
 
         object.scale.set(0.035,0.035,0.035);
-        object.position.set(18.7,-2,0.3);
+        object.position.set(coordinates.x,-2.5, coordinates.z);
         object.rotation.set(0, 1, 0);
         blurMeshes.push(object);
 
@@ -160,9 +167,9 @@ window.onload = function(){
 
     for(var i = 0; i < blurMeshes.length; i++){
       if(i % 2 === 0){
-        blurMeshes[i].rotation.y -= 0.1; //rotation clockwise
+        blurMeshes[i].rotation.y -= 0.5; //rotation clockwise
       } else {
-        blurMeshes[i].rotation.y += 0.1; //rotation counter-clockwise
+        blurMeshes[i].rotation.y += 0.5; //rotation counter-clockwise
       }
     }
     //Up/down movement
