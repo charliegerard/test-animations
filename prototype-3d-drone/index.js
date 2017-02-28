@@ -51,6 +51,7 @@ window.onload = function(){
 
     loadDroneBody();
     loadPropellers();
+    loadDisk();
 
     // Display the drone once all assets have been loaded.
     manager.onLoad = function(){
@@ -83,39 +84,36 @@ window.onload = function(){
   }
 
   function loadPropeller(coordinates){
-    // objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
-    //     propellerObject.traverse(function(child){
-    //       if(child instanceof THREE.Mesh){
-    //           child.material = material;
-    //       }
-    //     })
-    //     propellerMeshes.push(propellerObject)
-    //     propellerObject.position.set(coordinates.x,coordinates.y,coordinates.z);
-    //     droneGroup.add(propellerObject);
+    objLoader.load('assets/Propeller-NoPhong.obj', function(propellerObject){
+        propellerObject.traverse(function(child){
+          if(child instanceof THREE.Mesh){
+              child.material = material;
+          }
+        })
+        propellerMeshes.push(propellerObject)
+        propellerObject.position.set(coordinates.x,coordinates.y,coordinates.z);
+        droneGroup.add(propellerObject);
+    });
+
+    // mtlLoader = new THREE.MTLLoader();
+    // mtlLoader.setBaseUrl('assets/Assets/Propeller/');
+    // mtlLoader.setPath( 'assets/Assets/Propeller/' );
+    // mtlLoader.load( 'Propeller.mtl', function( materials ) {
+    //   materials.preload();
+    //   objLoader.setMaterials( materials );
+    //   // objLoader.setPath( '../' );
+    //   objLoader.load( 'assets/new-blur.obj', function ( object ) {
+    //     propellerMeshes.push(object)
+    //     object.position.set(coordinates.x,coordinates.y,coordinates.z);
+    //     droneGroup.add(object);
+    //   });
     // });
 
-    mtlLoader = new THREE.MTLLoader();
-    // mtlLoader.setBaseUrl('assets/');
-    // mtlLoader.setPath( 'assets/' );
-    mtlLoader.load( '', function( materials ) {
-      materials.preload();
-      objLoader.setMaterials( materials );
-      objLoader.setPath( 'assets/' );
-      objLoader.load( 'test.obj', function ( object ) {
-        // console.log(object.children[0].material);
-        console.log(material);
-        object.traverse(function(child){
-          if(child instanceof THREE.Mesh){
-              // console.log(child.material);
-              child.material = child.material;
-          }
-
-        })
-        propellerMeshes.push(object)
-        object.position.set(coordinates.x,coordinates.y,coordinates.z);
-        droneGroup.add(object);
-      });
-    });
+    // objLoader.load( 'assets/test.obj', function ( object ) {
+    //   propellerMeshes.push(object)
+    //   object.position.set(coordinates.x,coordinates.y,coordinates.z);
+    //   droneGroup.add(object);
+    // });
 
     // jsonLoader.load('assets/test-material.json', function(object){
     //   console.log(object.materials);
@@ -128,6 +126,28 @@ window.onload = function(){
     //     droneGroup.add(propellerMesh);
     //   }
     // })
+  }
+
+  function loadDisk(){
+    objLoader.load('assets/Assets/Blur/Blur.obj', function(object){
+      // var texture = THREE.TextureLoader('assets/Assets/Blur/Disk.png');
+      var texture = THREE.ImageUtils.loadTexture('assets/Assets/Blur/Disk.png');
+      var blurMaterial = new THREE.MeshBasicMaterial( { map: texture, transparent: true, alphaTest: 0 } );
+      blurMaterial.side = THREE.DoubleSide;
+      blurMaterial.opacity = 0.5;
+
+      object.traverse(function(child){
+        if(child instanceof THREE.Mesh){
+          child.material = blurMaterial
+        }
+      })
+
+      object.scale.set(0.035,0.035,0.035);
+      object.position.set(18.7,-2,0.3);
+      object.rotation.set(0, 1, 0);
+
+      droneGroup.add(object);
+    })
   }
 
   function loadDroneBody(){
