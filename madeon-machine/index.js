@@ -8,8 +8,6 @@ window.onload = function(){
   var playing = false;
   var soundObjects = [];
 
-  var firstSoundPlaying;
-
   init();
 
   function init() {
@@ -18,7 +16,6 @@ window.onload = function(){
 
     for(var i = 0; i < sounds.length; i++){
       // loadSound(sounds[i].dataset.url);
-
       soundArray.push(sounds[i].dataset.url);
       soundObjects.push(new Sound(sounds[i].dataset.url, context))
     }
@@ -47,6 +44,7 @@ window.onload = function(){
   // }
 
   containerDiv.addEventListener('click', function(e){
+    activeSounds = [];
     var soundId = parseInt(e.target.dataset.id);
     activeSounds.push(soundId);
     soundObjects[soundId].element = document.getElementsByClassName('sound')[soundId];
