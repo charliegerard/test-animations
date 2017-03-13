@@ -51,15 +51,18 @@ window.onload = function(){
     e.preventDefault();
     activeSounds = [];
     var soundId = parseInt(e.target.dataset.id);
-    if(!activeSounds.includes(soundId)){
-      activeSounds.push(soundId);
-    }
+    // if(!activeSounds.includes(soundId)){
+    //   activeSounds.push(soundId);
+    // }
+    console.log(activeSounds);
 
     if(!soundObjects[soundId].playing){
-      soundObjects[soundId].play();
+      activeSounds.push(soundObjects[soundId]);
+      // soundObjects[soundId].play();
       soundObjects[soundId].playing = true;
     } else {
-      soundObjects[soundId].stop();
+      activeSounds.splice(soundId, 1);
+      // soundObjects[soundId].stop();
       soundObjects[soundId].playing = false;
     }
   });
