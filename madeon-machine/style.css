@@ -1,18 +1,24 @@
+h1{
+  text-align: center;
+}
+
 .sound{
   width: 50px;
   height: 50px;
   background-color: lightgrey;
-  position: absolute;
+  /*position: absolute;*/
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+  opacity: 0.5;
+  border-radius: 5px;
 }
 
-.sound:nth-child(1){
-  left: 100px;
-  top: 7px;
-}
-
-#timer{
-  position: absolute;
-  top: 50px;
-  left: 25px;
-  color: black;
+#container{
+  width: 15%;
+  margin-left: 10%;
+  margin-top: 10%;
+  height: 100px;
+  /*background: pink;*/
+  transform: rotateZ(45deg);
 }
