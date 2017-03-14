@@ -1,85 +1,86 @@
-window.onload = function(){
-  var containerDiv = document.getElementById('container');
-  var context;
-  var sounds = document.getElementsByClassName('sound');
-  var soundArray = [];
-  var bufferLoader, buffersArray;
-  var activeSounds = [];
-  var playing = false;
-  var soundObjects = [];
-  var timestampFirstSound;
-  var lengthLoop;
+var soundBlocks = $('.sound');
+var howls = {};
+var sounds = [];
+var activeSounds = [];
+var inactiveSounds = [];
+var durationLoop;
 
-  init();
+getSoundsUrls();
+init();
 
-  function init() {
-    window.AudioContext = window.AudioContext || window.webkitAudioContext;
-    context = new AudioContext();
+function getSoundsUrls(){
+  for(var i = 0; i < soundBlocks.length; i++){
+    sounds.push(soundBlocks[i].dataset.url);
+    inactiveSounds.push(soundBlocks[i].dataset.url);
+  }
+}
 
-    for(var i = 0; i < sounds.length; i++){
-      soundArray.push(sounds[i].dataset.url); //Need to send the path to sound file in the bufferLoader.
-      soundObjects.push(new Sound(sounds[i].dataset.url, context, i))
-    }
+function init(){
 
-    bufferLoader = new BufferLoader(
-      context,
-      soundArray,
-      finishedLoading
-    );
-
-    bufferLoader.load();
+  for(var i = 0; i < soundBlocks.length; i++){
+    howls[sounds[i]] = new Howl({
+      src: [soundBlocks[i].dataset.url],
+      preload: true,
+      loop: true,
+      volume: 1,
+      onplay: function(){
+        console.log("Playing");
+      },
+      onpause: function(){
+        console.log('pause');
+      },
+      onend: function(){
+        console.log("Finished: ", sounds[i])
+      }
+    })
   }
 
-  function finishedLoading(bufferList) {
-    buffersArray = bufferList;
-    // return buffersArray;
-    for(var i = 0; i < soundObjects.length; i++){
-      soundObjects[i].source = context.createBufferSource();
-      soundObjects[i].source.buffer = buffersArray[i];
-      soundObjects[i].source.connect(context.destination);
-      soundObjects[i].source.onended = onEnded;
-    }
-
-    return soundObjects;
-  }
-
-  function onEnded(){
-    if(activeSounds.length == 1){
-      var endFirstSound = new Date();
-      var seconds = (endFirstSound - timestampFirstSound) / 1000;
-      // console.log(seconds);
-      lengthLoop = seconds;
-    }
-    // if(lengthLoop){
-    //   var timer = setInterval(function(){
-    //     console.log('boo');
-    //     for(var i = 0; i < activeSounds.length; i++){
-    //       activeSounds[i].play();
-    //     }
-    //   }, lengthLoop * 1000)
-    // }
-  }
-
-  containerDiv.addEventListener('click', function(e){
-    if(activeSounds.length === 0){
-      timestampFirstSound = new Date();
-    }
+  $(document).on('click', '.sound', function(e){
     e.preventDefault();
-    var soundId = parseInt(e.target.dataset.id);
-    if(!activeSounds.includes(soundObjects[soundId])){
-      activeSounds.push(soundObjects[soundId]);
+    var blockId = e.target.dataset.id;
+
+    var isFirstSound = checkIfFirstSound();
+    if(isFirstSound){
+      durationLoop = howls[sounds[blockId]].duration(blockId);
+    }
+
+    if(activeSounds.includes(howls[sounds[blockId]])){
+      console.log('removing');
+      var elementIndex = activeSounds.indexOf(howls[sounds[blockId]]);
+      inactiveSounds.push(howls[sounds[blockId]]);
+      activeSounds.splice(elementIndex, 1);
     } else {
-      var indexElement = activeSounds.indexOf(soundObjects[soundId]);
-      activeSounds.splice(indexElement, 1);
+      console.log('adding')
+      var elementIndex = activeSounds.indexOf(howls[sounds[blockId]]);
+      inactiveSounds.splice(elementIndex, 1);
+      activeSounds.push(howls[sounds[blockId]]);
     }
-    playSounds(activeSounds);
-  });
 
-  function playSounds(sounds){
-    for(var i = 0; i < sounds.length; i++){
-      sounds[i].play();
+    if(activeSounds[0]){
+        if(activeSounds[0].playing()){
+          activeSounds[0].on('end', function(){
+            for(var x = 0; x < inactiveSounds.length; x++){
+              inactiveSounds[x].stop();
+            }
+            if(activeSounds.length === 1){
+              activeSounds[0].stop();
+              activeSounds[0].play()
+            } else if (activeSounds.length > 1){
+              for(var i = 0; i < activeSounds.length; i++){
+                activeSounds[i].stop();
+                activeSounds[i].play();
+              }
+            }
+          })
+        } else {
+          activeSounds[0].play();
+        }
     }
+  })
+}
+
+function checkIfFirstSound(){
+  if(activeSounds.length === 0){
+    return true;
   }
-
-
 }
