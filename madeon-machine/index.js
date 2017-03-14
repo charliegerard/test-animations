@@ -7,6 +7,8 @@ window.onload = function(){
   var activeSounds = [];
   var playing = false;
   var soundObjects = [];
+  var timestampFirstSound;
+  var lengthLoop;
 
   init();
 
@@ -37,33 +39,47 @@ window.onload = function(){
       soundObjects[i].source.connect(context.destination);
       soundObjects[i].source.onended = onEnded;
     }
+
     return soundObjects;
   }
 
   function onEnded(){
-    // playing = false;
-    // for(var i = 0; i < activeSounds.length; i++){
-    //   soundObjects[i].play();
+    if(activeSounds.length == 1){
+      var endFirstSound = new Date();
+      var seconds = (endFirstSound - timestampFirstSound) / 1000;
+      // console.log(seconds);
+      lengthLoop = seconds;
+    }
+    // if(lengthLoop){
+    //   var timer = setInterval(function(){
+    //     console.log('boo');
+    //     for(var i = 0; i < activeSounds.length; i++){
+    //       activeSounds[i].play();
+    //     }
+    //   }, lengthLoop * 1000)
     // }
   }
 
   containerDiv.addEventListener('click', function(e){
-    e.preventDefault();
-    activeSounds = [];
-    var soundId = parseInt(e.target.dataset.id);
-    // if(!activeSounds.includes(soundId)){
-    //   activeSounds.push(soundId);
-    // }
-    console.log(activeSounds);
-
-    if(!soundObjects[soundId].playing){
-      activeSounds.push(soundObjects[soundId]);
-      // soundObjects[soundId].play();
-      soundObjects[soundId].playing = true;
-    } else {
-      activeSounds.splice(soundId, 1);
-      // soundObjects[soundId].stop();
-      soundObjects[soundId].playing = false;
+    if(activeSounds.length === 0){
+      timestampFirstSound = new Date();
     }
+    e.preventDefault();
+    var soundId = parseInt(e.target.dataset.id);
+    if(!activeSounds.includes(soundObjects[soundId])){
+      activeSounds.push(soundObjects[soundId]);
+    } else {
+      var indexElement = activeSounds.indexOf(soundObjects[soundId]);
+      activeSounds.splice(indexElement, 1);
+    }
+    playSounds(activeSounds);
   });
+
+  function playSounds(sounds){
+    for(var i = 0; i < sounds.length; i++){
+      sounds[i].play();
+    }
+  }
+
+
 }
