@@ -57,24 +57,26 @@ function init(){
     }
 
     if(activeSounds[0]){
-        if(activeSounds[0].playing()){
-          activeSounds[0].on('end', function(){
-            for(var x = 0; x < inactiveSounds.length; x++){
-              inactiveSounds[x].stop();
+      if(activeSounds[0].playing()){
+        activeSounds[0].on('end', function(){
+          for(var x = 0; x < inactiveSounds.length; x++){
+            inactiveSounds[x].stop();
+          }
+          if(activeSounds.length === 1){
+            activeSounds[0].stop();
+            activeSounds[0].play();
+          } else if (activeSounds.length > 1){
+            for(var i = 0; i < activeSounds.length; i++){
+              activeSounds[i].stop();
+              activeSounds[i].play();
             }
-            if(activeSounds.length === 1){
-              activeSounds[0].stop();
-              activeSounds[0].play()
-            } else if (activeSounds.length > 1){
-              for(var i = 0; i < activeSounds.length; i++){
-                activeSounds[i].stop();
-                activeSounds[i].play();
-              }
-            }
-          })
-        } else {
-          activeSounds[0].play();
-        }
+          }
+        })
+      } else {
+        activeSounds[0].play();
+        // console.log(soundBlocks[blockId]);
+        soundBlocks[blockId].className += ' active';
+      }
     }
   })
 }
