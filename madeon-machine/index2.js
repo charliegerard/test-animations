@@ -20,6 +20,7 @@ function init(){
       src: [soundBlocks[i].dataset.url],
       preload: true,
       loop: true,
+      volume: 1,
       onplay: function(){
         console.log("Playing");
       },
@@ -50,17 +51,24 @@ function init(){
     }
 
     if(activeSounds.length === 1){
+      console.log('one sound');
       for(var i = 0; i < activeSounds.length; i++){
         activeSounds[i].play();
       }
 
-    } else {
+    } else if(activeSounds.length > 1) {
+      console.log('more than 1 sound');
       activeSounds[0].on('end', function(){
-        activeSounds[0].stop();
         for(var i = 0; i < activeSounds.length; i++){
+          activeSounds[i].stop();
           activeSounds[i].play();
         }
       })
+    } else {
+      console.log('no sound');
+        for(var i = 0; i < activeSounds.length; i++){
+          activeSounds[i].stop();
+        }
     }
   })
 
