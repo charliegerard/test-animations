@@ -65,10 +65,12 @@ function init(){
           if(activeSounds.length === 1){
             activeSounds[0].stop();
             activeSounds[0].play();
+            soundBlocks[0].className += ' active';
           } else if (activeSounds.length > 1){
             for(var i = 0; i < activeSounds.length; i++){
               activeSounds[i].stop();
               activeSounds[i].play();
+              soundBlocks[i].className += ' active';
             }
           }
         })
