@@ -11,7 +11,6 @@ init();
 function getSoundsUrls(){
   for(var i = 0; i < soundBlocks.length; i++){
     sounds.push(soundBlocks[i].dataset.url);
-    inactiveSounds.push(soundBlocks[i].dataset.url);
   }
 }
 
@@ -33,6 +32,7 @@ function init(){
         console.log("Finished: ", sounds[i])
       }
     })
+    inactiveSounds.push(howls[sounds[i]])
   }
 
   $(document).on('click', '.sound', function(e){
@@ -74,7 +74,6 @@ function init(){
         })
       } else {
         activeSounds[0].play();
-        // console.log(soundBlocks[blockId]);
         soundBlocks[blockId].className += ' active';
       }
     }
