@@ -61,10 +61,16 @@ function start(){
       console.log('removing');
       inactiveSounds.push(soundObjects[blockId].soundNode);
       activeSounds.splice(elementIndex, 1);
+      
+      soundObjects[blockId].element.classList.add('pending');
     } else {
       console.log('adding');
       inactiveSounds.splice(elementIndex, 1);
       activeSounds.push(soundObjects[blockId].soundNode);
+
+      if(!isFirstSound){
+        soundObjects[blockId].element.classList.add('pending');
+      }
     }
 
     // if(activeSounds.includes(howls[sounds[blockId]])){
@@ -81,13 +87,27 @@ function start(){
       activeSounds[0].on('end', function(){
         for(var x = 0; x < inactiveSounds.length; x++){
           inactiveSounds[x].stop();
-          for(var y = 0; y < soundObjects.length; y++){
-            console.log(soundObjects[y].id === blockId);
-            if(soundObjects[y].id === blockId && soundObjects[y].element.classList.contains('active')){
-              console.log('getting here?');
-              soundObjects[y].element.classList.remove('active');
+
+          soundObjects.filter(function(e){
+            if(e.soundNode === inactiveSounds[x] && e.element.classList.contains('pending')){
+              e.element.classList.remove('pending');
+              console.log(e.element.classList);
+              e.element.classList.remove('active');
             }
-          }
+            // console.log('id', e.id);
+            // console.log('block id', blockId);
+            // if(e.id === blockId && e.element.classList.contains('active')){
+            //   e.element.classList.remove('active');
+            // }
+          });
+
+          // for(var y = 0; y < soundObjects.length; y++){
+          //   // console.log(soundObjects[y].id === blockId);
+          //   if(soundObjects[y].id === blockId && soundObjects[y].element.classList.contains('active')){
+          //     // console.log('getting here?');
+          //     soundObjects[y].element.classList.remove('active');
+          //   }
+          // }
 
           // for(var i = 0; i < soundBlocks.length; i++){
           //   if(soundBlocks[i].dataset.url === inactiveSounds[x]._src){
@@ -100,15 +120,20 @@ function start(){
         }
 
         for(var i = 0; i < activeSounds.length; i++){
+          soundObjects.filter(function(e){
+            if(e.soundNode === activeSounds[i] && e.element.classList.contains('pending')){
+              e.element.classList.remove('pending');
+            }
+          });
+
           activeSounds[i].stop();
           activeSounds[i].play();
         }
       })
-      
+
     } else if (activeSounds[0] && !activeSounds[0].playing()) {
       activeSounds[0].play();
     } else { // If all sounds removed, stop the ones playing.
-      console.log('here?');
       inactiveSounds[inactiveSounds.length-1].on('end', function(){
         for(var i = 0; i < inactiveSounds.length; i++){
           inactiveSounds[i].stop();

@@ -53,6 +53,7 @@ main{
   margin-right: 10px;
   margin-bottom: 10px;
   /*opacity: 0.5;*/
+  opacity: 1;
   border-radius: 5px;
 }
 
@@ -88,4 +89,27 @@ main{
 
 .active{
   background-color: rgb(206, 147, 71);
+}
+
+.pending{
+  animation: pendingadd 1.5s infinite;
+  animation-timing-function: ease-in;
+}
+
+@keyframes pendingadd {
+  0%{
+    opacity: 1;
+  }
+  25%{
+    opacity: 0.5;
+  }
+  50%{
+    opacity: 0;
+  }
+  75%{
+    opacity: 0.5;
+  }
+  100%{
+    opacity: 1;
+  }
 }
