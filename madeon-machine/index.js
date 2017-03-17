@@ -23,12 +23,10 @@ function initSoundObjects(){
       loop: true,
       volume: 1,
       onplay: function(){
-        console.log("Playing");
       },
       onpause: function(){
       },
       onend: function(){
-        console.log("Finished: ", this._src);
       }
     });
     // Classify all sounds as inactive at first.
@@ -42,52 +40,44 @@ function start(){
   $(document).on('click', '.sound', function(e){
     e.preventDefault();
     var blockId = e.target.dataset.id;
-    var elementIndex = activeSounds.indexOf(soundObjects[blockId].soundNode);
+    var soundClicked = soundObjects[blockId].soundNode;
+    var elementIndex = activeSounds.indexOf(soundClicked);
 
-    var isFirstSound = checkIfFirstSound();
-
-    // If the sound clicked is already playing, move it from the active array to the inactive one.
-    // And apply the pending style.
-    // Otherwise if it's inactive, move it to the active array.
-    if(activeSounds.includes(soundObjects[blockId].soundNode)){
-      inactiveSounds.push(soundObjects[blockId].soundNode);
-      activeSounds.splice(elementIndex, 1);
-
-      soundObjects[blockId].element.classList.add('pending');
+    if(activeSounds.includes(soundClicked)){
+      moveSoundToCorrectArray(soundClicked, elementIndex, 'inactive');
     } else {
-      inactiveSounds.splice(elementIndex, 1);
-      activeSounds.push(soundObjects[blockId].soundNode);
-
-      if(!isFirstSound){
-        soundObjects[blockId].element.classList.add('pending');
-      }
+      moveSoundToCorrectArray(soundClicked, elementIndex, 'active');
     }
-    
-    // If there is at least 1 sound and it is currently playing.
-    if(activeSounds[0] && activeSounds[0].playing()){
+    soundObjects[blockId].element.classList.add('pending');
 
+    if(activeSounds[0] && activeSounds[0].playing()){
       activeSounds[0].on('end', function(){
         stopInactiveSounds();
         startActiveSounds();
       });
 
-      //If there is one sound added but it's not playing yet (when clicking on 1st sound when launching the app.)
+      //If there is one sound active but not playing yet (1st sound when launching the app.)
     } else if (activeSounds[0] && !activeSounds[0].playing()) {
       activeSounds[0].play();
       changeStateOfActiveSounds(activeSounds[0]);
     } else { // If all sounds removed, stop the ones playing.
       inactiveSounds[inactiveSounds.length-1].on('end', function(){
         stopInactiveSounds();
+        startActiveSounds();
       });
     }
   });
 }
 
-function checkIfFirstSound(){
-  if(activeSounds.length === 0){
-    return true;
+function moveSoundToCorrectArray(sound, index, array){
+  if(array === 'inactive'){
+    inactiveSounds.push(sound);
+    activeSounds.splice(index, 1);
+  } else if (array === 'active'){
+    inactiveSounds.splice(index, 1);
+    activeSounds.push(sound);
   }
-}
+};
 
 function changeStateOfInactiveSounds(sound){
   soundObjects.filter(function(e){
