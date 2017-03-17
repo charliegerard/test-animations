@@ -45,14 +45,12 @@ main{
 }
 
 .sound{
-  width: 30%;
-  height: 70px;
-  position: relative;
+  width: 4em;
+  height: 4em;
   background-color: rgb(200, 195, 191);
   display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 10px;
-  /*opacity: 0.5;*/
+  margin-right: 0.5em;
+  margin-bottom: 0.5em;
   opacity: 1;
   border-radius: 5px;
 }
@@ -67,10 +65,11 @@ main{
 
 .sound-block{
   display: inline-block;
-  width: 30%;
+  width: 29%;
   transform: rotateZ(45deg);
-  margin-top: 15%;
-  margin-right: 2%;
+  margin-top: 20%;
+  margin-left: 1%;
+  margin-right: 1%;
 }
 
 #footer{

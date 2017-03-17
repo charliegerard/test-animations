@@ -27,7 +27,6 @@ function initSoundObjects(){
         console.log("Playing");
       },
       onpause: function(){
-        console.log('pause');
       },
       onend: function(){
         console.log("Finished: ", this._src);
@@ -52,13 +51,11 @@ function start(){
     }
 
     if(activeSounds.includes(soundObjects[blockId].soundNode)){
-      console.log('removing');
       inactiveSounds.push(soundObjects[blockId].soundNode);
       activeSounds.splice(elementIndex, 1);
 
       soundObjects[blockId].element.classList.add('pending');
     } else {
-      console.log('adding');
       inactiveSounds.splice(elementIndex, 1);
       activeSounds.push(soundObjects[blockId].soundNode);
 
@@ -75,7 +72,6 @@ function start(){
           soundObjects.filter(function(e){
             if(e.soundNode === inactiveSounds[x] && e.element.classList.contains('pending')){
               e.element.classList.remove('pending');
-              console.log(e.element);
               e.element.classList.remove('active');
             }
           });
