@@ -2,14 +2,15 @@ h1{
   text-align: center;
   font-weight: 200;
   font-size: 40px;
+  font-family: 'Playfair Display', serif;
 }
 
 p{
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
   text-align: center;
-  line-height: 30px;
-  font-family: 'Open Sans', sans-serif;
+  line-height: 25px;
+  font-family: 'Raleway', sans-serif;
   font-size: 15px;
 }
 
@@ -159,11 +160,42 @@ main{
     margin-left: 1%;
     margin-right: 1%;
   }
+
+  .active{
+    background-color: rgb(206, 147, 71);
+  }
+
+  .pending{
+    animation: pendingadd 1.5s infinite;
+    animation-timing-function: ease-in;
+  }
+
+  @keyframes pendingadd {
+    0%{
+      opacity: 1;
+    }
+    25%{
+      opacity: 0.5;
+    }
+    50%{
+      opacity: 0;
+    }
+    75%{
+      opacity: 0.5;
+    }
+    100%{
+      opacity: 1;
+    }
+  }
 }
 
 /* Desktop */
 
 @media screen and (min-width: 900px){
+
+  p{
+    width: 50%;
+  }
 
   .sound{
     width: 4em;
@@ -191,5 +223,32 @@ main{
     width: 18%;
     transform: rotateZ(45deg);
     margin-top: 20%;
+  }
+
+  .active{
+    background-color: rgb(206, 147, 71);
+  }
+
+  .pending{
+    animation: pendingadd 1.5s infinite;
+    animation-timing-function: ease-in;
+  }
+
+  @keyframes pendingadd {
+    0%{
+      opacity: 1;
+    }
+    25%{
+      opacity: 0.5;
+    }
+    50%{
+      opacity: 0;
+    }
+    75%{
+      opacity: 0.5;
+    }
+    100%{
+      opacity: 1;
+    }
   }
 }
