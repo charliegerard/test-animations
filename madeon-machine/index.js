@@ -4,6 +4,7 @@ var sounds = [];
 var activeSounds = [];
 var inactiveSounds = [];
 var soundObjects = [];
+var locationBlocks = $('.location');
 
 getSoundsUrls();
 initSoundObjects();
@@ -37,8 +38,6 @@ function initSoundObjects(){
 }
 
 function start(){
-  var locationBlocks = $('.location');
-
   selectedLocation(locationBlocks[0]);
 
   $(document).on('click', '.sound', function(e){
@@ -79,7 +78,7 @@ function start(){
 
     $('main').css('background-image', url[0]);
 
-    // selectedLocation(locationBlocks[0]);
+    selectedLocation(e.target);
   })
 }
 
@@ -134,5 +133,11 @@ function startActiveSounds(){
 }
 
 function selectedLocation(location){
-  location.classList.add('location-selected');
+  locationBlocks.filter(function(x){
+    if(locationBlocks[x] === location){
+      location.classList.add('location-selected');
+    } else {
+      locationBlocks[x].classList.remove('location-selected')
+    }
+  });
 }
