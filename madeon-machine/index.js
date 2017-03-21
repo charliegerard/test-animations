@@ -37,6 +37,10 @@ function initSoundObjects(){
 }
 
 function start(){
+  var locationBlocks = $('.location');
+  console.log(locationBlocks[0]);
+  locationBlocks[0].classList.add('location-selected');
+
   $(document).on('click', '.sound', function(e){
     e.preventDefault();
     var blockId = e.target.dataset.id;
