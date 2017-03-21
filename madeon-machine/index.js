@@ -38,8 +38,8 @@ function initSoundObjects(){
 
 function start(){
   var locationBlocks = $('.location');
-  console.log(locationBlocks[0]);
-  locationBlocks[0].classList.add('location-selected');
+
+  selectedLocation(locationBlocks[0]);
 
   $(document).on('click', '.sound', function(e){
     e.preventDefault();
@@ -71,6 +71,16 @@ function start(){
       });
     }
   });
+
+  $(document).on('click', '.location', function(e){
+    e.preventDefault();
+    var backgroundImage = $(e.target).css('background-image');
+    var url = /^url\((['"]?)(.*)\1\)$/.exec(backgroundImage);
+
+    $('main').css('background-image', url[0]);
+
+    // selectedLocation(locationBlocks[0]);
+  })
 }
 
 function moveSoundToCorrectArray(sound, index, array){
@@ -121,4 +131,8 @@ function startActiveSounds(){
     activeSounds[i].play();
     changeStateOfActiveSounds(activeSounds[i]);
   }
+}
+
+function selectedLocation(location){
+  location.classList.add('location-selected');
 }

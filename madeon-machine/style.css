@@ -112,7 +112,7 @@ main{
   background: rgba(255,255,255,0.7);
   left: 0;
   bottom: 0;
-  z-index: 5;
+  z-index: 10;
 }
 
 #footer p{
@@ -134,7 +134,7 @@ main{
 }
 
 #footer #places-container{
-  width: 40%;
+  width: 35%;
   display: flex;
   justify-content: space-between;
   margin: 0 auto;
@@ -148,6 +148,10 @@ main{
   display: inline-flex;
   background: grey;
   justify-content: space-between;
+}
+
+#footer #places-container .location:hover{
+  opacity: 0.5;
 }
 
 #footer #places-container .location:nth-of-type(1){
@@ -169,10 +173,6 @@ main{
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-#footer #places-container .location:hover {
-  opacity: 0.5;
 }
 
 #footer #places-container .location.location-selected{
