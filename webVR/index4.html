@@ -1,29 +1,37 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
-    <script type="text/javascript" src="https://rawgit.com/mayognaise/aframe-mouse-cursor-component/master/dist/aframe-mouse-cursor-component.min.js">
-
-    </script>
+    <script type="text/javascript" src="https://rawgit.com/mayognaise/aframe-mouse-cursor-component/master/dist/aframe-mouse-cursor-component.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
   </head>
   <body>
+    <!-- <a-scene> -->
+      <!-- <a-sky src="wally.jpg" rotation="0 -130 0" position="0 0 -100"></a-sky> -->
 
-    <a-scene>
-      <a-sky src="wally.jpg" rotation="0 -130 0"></a-sky>
+      <!-- <a-box color="red" cursor-listener depth="2" height="4" width="0.5" scale="1 1 1" position="50 0 -50">
+      </a-box> -->
+      <!-- <a-entity id="box" cursor-listener geometry="primitive: box" material="color: blue" depth="2" height="4" width="0.5" scale="1 1 1" position="10 0 -10"></a-entity>
 
-      <a-box color="red" scale="1 1 1" position="0 0 0"></a-box>
-
-      <a-entity camera mouse-cursor look-controls>
+      <a-entity camera look-controls>
         <a-entity cursor="fuse: true; fuseTimeout: 500"
                   position="0 0 -1"
                   geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                  material="color: white; shader: flat">
+                  material="color: black; shader: flat"
+                  raycaster="far: 50; interval: 1000;">
         </a-entity>
       </a-entity>
+    </a-scene> -->
 
-      <!-- <a-entity id="box" cursor-listener geometry="primitive: box" material="color: blue"></a-entity> -->
+    <a-scene>
+      <a-camera position="0 2 4">
+        <a-cursor color="white" radius="1" fuse="true" timeout="10"></a-cursor>
+      </a-camera>
 
+      <a-box color="red" test depth="2" height="4" width="0.5" scale="1 1 1" position="50 0 -50">
+      </a-box>
+
+      <a-sky src="wally.jpg" rotation="0 -130 0" position="0 0 -100"></a-sky>
     </a-scene>
 
-    <script type="text/javascript" src="index.js"></script>
   </body>
 </html>

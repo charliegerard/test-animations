@@ -4,12 +4,12 @@
 //   box.setAttribute('color', 'red');
 // });
 
-AFRAME.registerComponent('cursor-listener', {
-  init: function(){
-    var color = 'green';
-    this.el.addEventListener('click', function(evt){
-      this.setAttribute('material', 'color', color);
-      console.log("clicked");
-    })
+AFRAME.registerComponent('test', {
+  schema: {default: ''},
+  init() {
+    const sky = document.querySelector('a-sky');
+    this.el.addEventListener('click', () => {
+      this.el.setAttribute('color', 'pink')
+    });
   }
-})
+});
