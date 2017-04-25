@@ -1,11 +1,29 @@
 <html>
   <head>
     <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+    <script type="text/javascript" src="https://rawgit.com/mayognaise/aframe-mouse-cursor-component/master/dist/aframe-mouse-cursor-component.min.js">
+
+    </script>
   </head>
   <body>
+
     <a-scene>
       <a-sky src="wally.jpg" rotation="0 -130 0"></a-sky>
+
+      <a-box color="red" scale="1 1 1" position="0 0 0"></a-box>
+
+      <a-entity camera mouse-cursor look-controls>
+        <a-entity cursor="fuse: true; fuseTimeout: 500"
+                  position="0 0 -1"
+                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                  material="color: white; shader: flat">
+        </a-entity>
+      </a-entity>
+
+      <!-- <a-entity id="box" cursor-listener geometry="primitive: box" material="color: blue"></a-entity> -->
+
     </a-scene>
+
     <script type="text/javascript" src="index.js"></script>
   </body>
 </html>
