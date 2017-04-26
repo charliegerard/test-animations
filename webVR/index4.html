@@ -24,10 +24,17 @@
 
     <a-scene>
       <a-camera position="0 2 4">
-        <a-cursor color="white" radius="1" fuse="true" timeout="10"></a-cursor>
+        <!-- <a-cursor id="cursor" color="white" radius="10" fuse="true"></a-cursor> -->
+        <a-entity id="cursor" cursor="fuse: true; fuseTimeout: 500"
+            position="0 0 -1"
+            geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+            material="color: white; shader: flat">
+            <a-animation begin="fusing" easing="ease-in" attribute="scale"
+           fill="forwards" from="1 1 1" to="0.1 0.1 0.1" dur="1500"></a-animation>
+        </a-entity>
       </a-camera>
 
-      <a-box color="red" test depth="2" height="4" width="0.5" scale="1 1 1" position="50 0 -50">
+      <a-box material="side: double; color: #EF2D5E; transparent: true; opacity: 0" test depth="2" height="2" width="2" scale="3 3 3" position="50 0 55">
       </a-box>
 
       <a-sky src="wally.jpg" rotation="0 -130 0" position="0 0 -100"></a-sky>
