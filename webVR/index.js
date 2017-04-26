@@ -3,10 +3,16 @@ AFRAME.registerComponent('test', {
   init() {
     const sky = document.querySelector('a-sky');
     const cursor = document.getElementById("cursor");
-    this.el.addEventListener('click', () => {
-      // this.el.setAttribute('material', 'opacity: 1')
-      // cursor.setAttribute("geometry", "radiusInner", 0.04);
-      // cursor.setAttribute("geometry", "radiusOuter", 0.06);
+    this.el.addEventListener('mouseenter', (evt) => {
+      evt.preventDefault();
+      // Emit an event to start the cursor animation
+      cursor.emit("found")
+    });
+
+    this.el.addEventListener('mouseleave', (evt) => {
+      evt.preventDefault();
+      // Emit an event to reset the cursor animation
+      cursor.emit("lost")
     });
   }
 });
